@@ -23,34 +23,47 @@ const GROUPS = {
   L:["Inglaterra","Croacia","Ghana","Panamá"],
 };
 
-// ISO codes for flagcdn.com - works on all browsers including Windows Chrome
+// Unicode regional indicator letters — rendered as SVG via twemoji so they work on Windows Chrome
 const FLAGS = {
-  "México":"mx","Sudáfrica":"za","Corea del Sur":"kr","Chequia":"cz",
-  "Canadá":"ca","Bosnia y Herzegovina":"ba","Qatar":"qa","Suiza":"ch",
-  "Brasil":"br","Marruecos":"ma","Haití":"ht","Escocia":"gb-sct",
-  "Estados Unidos":"us","Paraguay":"py","Australia":"au","Turquía":"tr",
-  "Alemania":"de","Curazao":"cw","Costa de Marfil":"ci","Ecuador":"ec",
-  "Países Bajos":"nl","Japón":"jp","Suecia":"se","Túnez":"tn",
-  "Bélgica":"be","Egipto":"eg","Irán":"ir","Nueva Zelanda":"nz",
-  "España":"es","Cabo Verde":"cv","Arabia Saudita":"sa","Uruguay":"uy",
-  "Francia":"fr","Senegal":"sn","Irak":"iq","Noruega":"no",
-  "Argentina":"ar","Argelia":"dz","Austria":"at","Jordania":"jo",
-  "Portugal":"pt","R.D. Congo":"cd","Uzbekistán":"uz","Colombia":"co",
-  "Inglaterra":"gb-eng","Croacia":"hr","Ghana":"gh","Panamá":"pa",
+  "México":"🇲🇽","Sudáfrica":"🇿🇦","Corea del Sur":"🇰🇷","Chequia":"🇨🇿",
+  "Canadá":"🇨🇦","Bosnia y Herzegovina":"🇧🇦","Qatar":"🇶🇦","Suiza":"🇨🇭",
+  "Brasil":"🇧🇷","Marruecos":"🇲🇦","Haití":"🇭🇹","Escocia":"🏴󠁧󠁢󠁳󠁣󠁴󠁿",
+  "Estados Unidos":"🇺🇸","Paraguay":"🇵🇾","Australia":"🇦🇺","Turquía":"🇹🇷",
+  "Alemania":"🇩🇪","Curazao":"🇨🇼","Costa de Marfil":"🇨🇮","Ecuador":"🇪🇨",
+  "Países Bajos":"🇳🇱","Japón":"🇯🇵","Suecia":"🇸🇪","Túnez":"🇹🇳",
+  "Bélgica":"🇧🇪","Egipto":"🇪🇬","Irán":"🇮🇷","Nueva Zelanda":"🇳🇿",
+  "España":"🇪🇸","Cabo Verde":"🇨🇻","Arabia Saudita":"🇸🇦","Uruguay":"🇺🇾",
+  "Francia":"🇫🇷","Senegal":"🇸🇳","Irak":"🇮🇶","Noruega":"🇳🇴",
+  "Argentina":"🇦🇷","Argelia":"🇩🇿","Austria":"🇦🇹","Jordania":"🇯🇴",
+  "Portugal":"🇵🇹","R.D. Congo":"🇨🇩","Uzbekistán":"🇺🇿","Colombia":"🇨🇴",
+  "Inglaterra":"🏴󠁧󠁢󠁥󠁮󠁧󠁿","Croacia":"🇭🇷","Ghana":"🇬🇭","Panamá":"🇵🇦",
 };
 
-// Real flag images from flagcdn.com — renders on all platforms including Windows Chrome
+// Converts emoji codepoints to twemoji CDN url (works on Windows Chrome)
+const emojiToTwemojiUrl = (emoji) => {
+  const codePoints = [...emoji].map(c => c.codePointAt(0).toString(16)).filter(c => c !== "fe0f" && c !== "200d");
+  // For flags with ZWJ sequences (Scotland, England), keep all parts
+  const allPoints = [...emoji].map(c => c.codePointAt(0).toString(16)).filter(c => c !== "fe0f");
+  const hasTag = allPoints.some(c => parseInt(c,16) >= 0xe0000);
+  if (hasTag) {
+    // subdivision flag (Scotland, England, Wales)
+    const seq = allPoints.filter(c => parseInt(c,16) !== 0x200d).join("-");
+    return `https://cdn.jsdelivr.net/npm/twemoji@14.0.2/assets/svg/${seq}.svg`;
+  }
+  return `https://cdn.jsdelivr.net/npm/twemoji@14.0.2/assets/svg/${codePoints.join("-")}.svg`;
+};
+
 const Flag = ({team, size=32}) => {
-  const code = FLAGS[team];
-  if (!code) return <span style={{display:"block",width:size,height:Math.round(size*0.75),background:"rgba(255,255,255,.1)",borderRadius:3}}/>;
+  const emoji = FLAGS[team];
+  if (!emoji) return <span style={{display:"inline-block",width:size,height:Math.round(size*0.75),background:"rgba(255,255,255,.1)",borderRadius:3}}/>;
+  const url = emojiToTwemojiUrl(emoji);
   return (
     <img
-      src={`https://flagcdn.com/w${size}/${code}.png`}
-      srcSet={`https://flagcdn.com/w${size*2}/${code}.png 2x`}
+      src={url}
       width={size}
       alt={team}
-      style={{borderRadius:3,objectFit:"cover",display:"block",height:"auto"}}
-      onError={e=>{e.target.style.display="none";}}
+      style={{borderRadius:3,display:"block",height:"auto"}}
+      onError={e=>{e.target.replaceWith(Object.assign(document.createElement("span"),{textContent:emoji,style:"font-size:"+size*0.8+"px;line-height:1"}));}}
     />
   );
 };
