@@ -23,19 +23,36 @@ const GROUPS = {
   L:["Inglaterra","Croacia","Ghana","Panamá"],
 };
 
+// ISO codes for flagcdn.com - works on all browsers including Windows Chrome
 const FLAGS = {
-  "México":"🇲🇽","Sudáfrica":"🇿🇦","Corea del Sur":"🇰🇷","Chequia":"🇨🇿",
-  "Canadá":"🇨🇦","Bosnia y Herzegovina":"🇧🇦","Qatar":"🇶🇦","Suiza":"🇨🇭",
-  "Brasil":"🇧🇷","Marruecos":"🇲🇦","Haití":"🇭🇹","Escocia":"🏴󠁧󠁢󠁳󠁣󠁴󠁿",
-  "Estados Unidos":"🇺🇸","Paraguay":"🇵🇾","Australia":"🇦🇺","Turquía":"🇹🇷",
-  "Alemania":"🇩🇪","Curazao":"🇨🇼","Costa de Marfil":"🇨🇮","Ecuador":"🇪🇨",
-  "Países Bajos":"🇳🇱","Japón":"🇯🇵","Suecia":"🇸🇪","Túnez":"🇹🇳",
-  "Bélgica":"🇧🇪","Egipto":"🇪🇬","Irán":"🇮🇷","Nueva Zelanda":"🇳🇿",
-  "España":"🇪🇸","Cabo Verde":"🇨🇻","Arabia Saudita":"🇸🇦","Uruguay":"🇺🇾",
-  "Francia":"🇫🇷","Senegal":"🇸🇳","Irak":"🇮🇶","Noruega":"🇳🇴",
-  "Argentina":"🇦🇷","Argelia":"🇩🇿","Austria":"🇦🇹","Jordania":"🇯🇴",
-  "Portugal":"🇵🇹","R.D. Congo":"🇨🇩","Uzbekistán":"🇺🇿","Colombia":"🇨🇴",
-  "Inglaterra":"🏴󠁧󠁢󠁥󠁮󠁧󠁿","Croacia":"🇭🇷","Ghana":"🇬🇭","Panamá":"🇵🇦",
+  "México":"mx","Sudáfrica":"za","Corea del Sur":"kr","Chequia":"cz",
+  "Canadá":"ca","Bosnia y Herzegovina":"ba","Qatar":"qa","Suiza":"ch",
+  "Brasil":"br","Marruecos":"ma","Haití":"ht","Escocia":"gb-sct",
+  "Estados Unidos":"us","Paraguay":"py","Australia":"au","Turquía":"tr",
+  "Alemania":"de","Curazao":"cw","Costa de Marfil":"ci","Ecuador":"ec",
+  "Países Bajos":"nl","Japón":"jp","Suecia":"se","Túnez":"tn",
+  "Bélgica":"be","Egipto":"eg","Irán":"ir","Nueva Zelanda":"nz",
+  "España":"es","Cabo Verde":"cv","Arabia Saudita":"sa","Uruguay":"uy",
+  "Francia":"fr","Senegal":"sn","Irak":"iq","Noruega":"no",
+  "Argentina":"ar","Argelia":"dz","Austria":"at","Jordania":"jo",
+  "Portugal":"pt","R.D. Congo":"cd","Uzbekistán":"uz","Colombia":"co",
+  "Inglaterra":"gb-eng","Croacia":"hr","Ghana":"gh","Panamá":"pa",
+};
+
+// Real flag images from flagcdn.com — renders on all platforms including Windows Chrome
+const Flag = ({team, size=32}) => {
+  const code = FLAGS[team];
+  if (!code) return <span style={{display:"block",width:size,height:Math.round(size*0.75),background:"rgba(255,255,255,.1)",borderRadius:3}}/>;
+  return (
+    <img
+      src={`https://flagcdn.com/w${size}/${code}.png`}
+      srcSet={`https://flagcdn.com/w${size*2}/${code}.png 2x`}
+      width={size}
+      alt={team}
+      style={{borderRadius:3,objectFit:"cover",display:"block",height:"auto"}}
+      onError={e=>{e.target.style.display="none";}}
+    />
+  );
 };
 
 const ALL_TEAMS = Object.values(GROUPS).flat();
@@ -376,7 +393,7 @@ const MatchCard = ({match, pred={}, real={}, locked, isAdmin, onPredChange, onRe
         {/* Home */}
         <div style={{flex:1,textAlign:"right"}}>
           {homeResolved
-            ? <><div style={{fontSize:26,lineHeight:1}}>{FLAGS[homeTeam]||"🏳️"}</div><div style={{color:"#fff",fontSize:12,fontWeight:700,marginTop:3}}>{homeTeam}</div></>
+            ? <><div style={{display:"flex",justifyContent:"flex-end"}}><Flag team={homeTeam} size={36}/></div><div style={{color:"#fff",fontSize:12,fontWeight:700,marginTop:3}}>{homeTeam}</div></>
             : <div style={{color:"rgba(255,255,255,.35)",fontSize:11,fontStyle:"italic",lineHeight:1.4,paddingRight:4}}>{homeTeam}</div>
           }
         </div>
@@ -401,7 +418,7 @@ const MatchCard = ({match, pred={}, real={}, locked, isAdmin, onPredChange, onRe
         {/* Away */}
         <div style={{flex:1,textAlign:"left"}}>
           {awayResolved
-            ? <><div style={{fontSize:26,lineHeight:1}}>{FLAGS[awayTeam]||"🏳️"}</div><div style={{color:"#fff",fontSize:12,fontWeight:700,marginTop:3}}>{awayTeam}</div></>
+            ? <><div style={{display:"flex",justifyContent:"flex-start"}}><Flag team={awayTeam} size={36}/></div><div style={{color:"#fff",fontSize:12,fontWeight:700,marginTop:3}}>{awayTeam}</div></>
             : <div style={{color:"rgba(255,255,255,.35)",fontSize:11,fontStyle:"italic",lineHeight:1.4,paddingLeft:4}}>{awayTeam}</div>
           }
         </div>
@@ -509,7 +526,7 @@ export default function App() {
     setPredictions(p=>({...p,[currentUser.username]:{...p[currentUser.username],champion:team}}));
     // champion stored with match_id = 0
     await supabase.from("predictions").upsert({username:currentUser.username,match_id:0,home_pred:null,away_pred:null,champion:team},{onConflict:"username,match_id"});
-    showToast(`${FLAGS[team]} ${team} guardado ✓`);
+    showToast(`✓ ${team} guardado como campeón`);
   };
 
   const setResult=async(matchId,side,val)=>{
@@ -677,9 +694,9 @@ export default function App() {
             {userChamp&&(
               <div className="glass-gold" style={{borderRadius:16,padding:"18px 20px",textAlign:"center",marginBottom:18,boxShadow:"0 8px 32px rgba(255,215,0,.15)"}}>
                 <div style={{color:"rgba(255,255,255,.5)",fontSize:13,marginBottom:6}}>Tu pronóstico:</div>
-                <div style={{fontSize:42}}>{FLAGS[userChamp]}</div>
+                <div style={{display:"flex",justifyContent:"center",marginBottom:4}}><Flag team={userChamp} size={64}/></div>
                 <div style={{fontFamily:"'Bangers',cursive",color:"#FFD700",fontSize:26,letterSpacing:1,marginTop:4}}>{userChamp}</div>
-                {results.champion&&<div style={{marginTop:10,fontWeight:800,color:results.champion===userChamp?"#4ade80":"#f87171",fontSize:15}}>{results.champion===userChamp?"✅ ¡Acertaste! +10 puntos 🎉":`❌ Ganó: ${FLAGS[results.champion]||""} ${results.champion}`}</div>}
+                {results.champion&&<div style={{marginTop:10,fontWeight:800,color:results.champion===userChamp?"#4ade80":"#f87171",fontSize:15}}>{results.champion===userChamp?"✅ ¡Acertaste! +10 puntos 🎉":`❌ Ganó: ${results.champion}`}</div>}
               </div>
             )}
             {!champLocked&&<>
@@ -687,7 +704,7 @@ export default function App() {
               <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(148px,1fr))",gap:8}}>
                 {filteredTeams.map(team=>(
                   <button key={team} className="team-picker-btn" onClick={()=>setChampionPick(team)} style={{borderColor:userChamp===team?"rgba(255,215,0,.6)":"rgba(255,255,255,.12)",background:userChamp===team?"rgba(255,215,0,.14)":"rgba(255,255,255,.05)"}}>
-                    <span style={{fontSize:22}}>{FLAGS[team]}</span><span style={{flex:1,textAlign:"left"}}>{team}</span>
+                    <Flag team={team} size={24}/><span style={{flex:1,textAlign:"left"}}>{team}</span>
                     {userChamp===team&&<span style={{color:"#FFD700",fontSize:14}}>✓</span>}
                   </button>
                 ))}
@@ -713,7 +730,7 @@ export default function App() {
                   <div style={{fontSize:i<3?22:15,fontWeight:800,color:"rgba(255,255,255,.5)",minWidth:30,textAlign:"center"}}>{medal}</div>
                   <div style={{flex:1}}>
                     <div style={{color:isMe?"#FFD700":"#fff",fontWeight:800,fontSize:14}}>{entry.username}{isMe&&<span style={{fontSize:11,opacity:.6,marginLeft:4}}>(vos)</span>}</div>
-                    {chPick&&<div style={{fontSize:11,color:"rgba(255,255,255,.35)",marginTop:2}}>Campeón: {FLAGS[chPick]||""} {chPick}</div>}
+                    {chPick&&<div style={{fontSize:11,color:"rgba(255,255,255,.35)",marginTop:2,display:"flex",alignItems:"center",gap:4}}>Campeón: <Flag team={chPick} size={14}/> {chPick}</div>}
                   </div>
                   <div style={{fontFamily:"'Bangers',cursive",fontSize:26,color:i===0?"#FFD700":i===1?"#C0C0C0":i===2?"#CD7F32":"rgba(255,255,255,.7)"}}>
                     {entry.points}<span style={{fontSize:13,fontFamily:"'Plus Jakarta Sans',sans-serif",fontWeight:600,color:"rgba(255,255,255,.35)",marginLeft:3}}>pts</span>
@@ -809,7 +826,7 @@ export default function App() {
             </div>
             {results.champion?(
               <div style={{background:"rgba(74,222,128,.08)",border:"1px solid rgba(74,222,128,.3)",borderRadius:16,padding:"18px 20px",textAlign:"center",marginBottom:18}}>
-                <div style={{fontSize:42}}>{FLAGS[results.champion]||""}</div>
+                <div style={{display:"flex",justifyContent:"center",marginBottom:4}}><Flag team={results.champion} size={64}/></div>
                 <div style={{fontFamily:"'Bangers',cursive",color:"#4ade80",fontSize:26,letterSpacing:1,marginTop:4}}>{results.champion} — Campeón 🎉</div>
                 <button onClick={()=>setChampionResult("")} style={{marginTop:12,background:"rgba(239,68,68,.15)",border:"1px solid rgba(239,68,68,.35)",borderRadius:10,color:"#f87171",padding:"7px 18px",cursor:"pointer",fontSize:13,fontFamily:"'Plus Jakarta Sans',sans-serif",fontWeight:700}}>Cambiar</button>
               </div>
@@ -819,7 +836,7 @@ export default function App() {
                 <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(148px,1fr))",gap:8}}>
                   {filteredTeams.map(team=>(
                     <button key={team} className="team-picker-btn" onClick={()=>setChampionResult(team)}>
-                      <span style={{fontSize:22}}>{FLAGS[team]}</span><span style={{flex:1,textAlign:"left"}}>{team}</span>
+                      <Flag team={team} size={24}/><span style={{flex:1,textAlign:"left"}}>{team}</span>
                     </button>
                   ))}
                 </div>
@@ -833,7 +850,7 @@ export default function App() {
                 return (
                   <div key={u.username} className="glass" style={{display:"flex",alignItems:"center",gap:10,padding:"9px 14px",borderRadius:12,marginBottom:6}}>
                     <div style={{color:"#fff",fontWeight:700,flex:1,fontSize:14}}>{u.username}</div>
-                    {pick?<div style={{display:"flex",alignItems:"center",gap:6}}><span style={{fontSize:20}}>{FLAGS[pick]||""}</span><span style={{color:"rgba(255,255,255,.65)",fontSize:13}}>{pick}</span></div>:<span style={{color:"rgba(255,255,255,.25)",fontSize:13}}>Sin pronóstico</span>}
+                    {pick?<div style={{display:"flex",alignItems:"center",gap:6}}><Flag team={pick} size={22}/><span style={{color:"rgba(255,255,255,.65)",fontSize:13}}>{pick}</span></div>:<span style={{color:"rgba(255,255,255,.25)",fontSize:13}}>Sin pronóstico</span>}
                   </div>
                 );
               })}
