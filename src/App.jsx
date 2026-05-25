@@ -9,7 +9,7 @@ const ADMIN_USERNAME = "Marrolaz";
 const ADMIN_PASSWORD = "Saralola";
 
 const GROUPS = {
-  A:["México","Sudáfrica","Corea del Sur","Chequia"],
+  A:["México","Sudáfrica","Corea del Sur","Rep. Checa"],
   B:["Canadá","Bosnia y Herzegovina","Qatar","Suiza"],
   C:["Brasil","Marruecos","Haití","Escocia"],
   D:["Estados Unidos","Paraguay","Australia","Turquía"],
@@ -23,51 +23,74 @@ const GROUPS = {
   L:["Inglaterra","Croacia","Ghana","Panamá"],
 };
 
-// Unicode regional indicator letters — rendered as SVG via twemoji so they work on Windows Chrome
-const FLAGS = {
-  "México":"🇲🇽","Sudáfrica":"🇿🇦","Corea del Sur":"🇰🇷","Chequia":"🇨🇿",
-  "Canadá":"🇨🇦","Bosnia y Herzegovina":"🇧🇦","Qatar":"🇶🇦","Suiza":"🇨🇭",
-  "Brasil":"🇧🇷","Marruecos":"🇲🇦","Haití":"🇭🇹","Escocia":"🏴󠁧󠁢󠁳󠁣󠁴󠁿",
-  "Estados Unidos":"🇺🇸","Paraguay":"🇵🇾","Australia":"🇦🇺","Turquía":"🇹🇷",
-  "Alemania":"🇩🇪","Curazao":"🇨🇼","Costa de Marfil":"🇨🇮","Ecuador":"🇪🇨",
-  "Países Bajos":"🇳🇱","Japón":"🇯🇵","Suecia":"🇸🇪","Túnez":"🇹🇳",
-  "Bélgica":"🇧🇪","Egipto":"🇪🇬","Irán":"🇮🇷","Nueva Zelanda":"🇳🇿",
-  "España":"🇪🇸","Cabo Verde":"🇨🇻","Arabia Saudita":"🇸🇦","Uruguay":"🇺🇾",
-  "Francia":"🇫🇷","Senegal":"🇸🇳","Irak":"🇮🇶","Noruega":"🇳🇴",
-  "Argentina":"🇦🇷","Argelia":"🇩🇿","Austria":"🇦🇹","Jordania":"🇯🇴",
-  "Portugal":"🇵🇹","R.D. Congo":"🇨🇩","Uzbekistán":"🇺🇿","Colombia":"🇨🇴",
-  "Inglaterra":"🏴󠁧󠁢󠁥󠁮󠁧󠁿","Croacia":"🇭🇷","Ghana":"🇬🇭","Panamá":"🇵🇦",
+// Flag images via country-flags npm package (bundled, no CDN needed)
+// Using inline SVG data URLs for maximum compatibility
+const FLAG_URLS = {
+  "México":        "https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.0.0/flags/4x3/mx.svg",
+  "Sudáfrica":     "https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.0.0/flags/4x3/za.svg",
+  "Corea del Sur": "https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.0.0/flags/4x3/kr.svg",
+  "Rep. Checa":       "https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.0.0/flags/4x3/cz.svg",
+  "Canadá":        "https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.0.0/flags/4x3/ca.svg",
+  "Bosnia y Herzegovina": "https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.0.0/flags/4x3/ba.svg",
+  "Qatar":         "https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.0.0/flags/4x3/qa.svg",
+  "Suiza":         "https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.0.0/flags/4x3/ch.svg",
+  "Brasil":        "https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.0.0/flags/4x3/br.svg",
+  "Marruecos":     "https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.0.0/flags/4x3/ma.svg",
+  "Haití":         "https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.0.0/flags/4x3/ht.svg",
+  "Escocia":       "https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.0.0/flags/4x3/gb-sct.svg",
+  "Estados Unidos":"https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.0.0/flags/4x3/us.svg",
+  "Paraguay":      "https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.0.0/flags/4x3/py.svg",
+  "Australia":     "https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.0.0/flags/4x3/au.svg",
+  "Turquía":       "https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.0.0/flags/4x3/tr.svg",
+  "Alemania":      "https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.0.0/flags/4x3/de.svg",
+  "Curazao":       "https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.0.0/flags/4x3/cw.svg",
+  "Costa de Marfil":"https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.0.0/flags/4x3/ci.svg",
+  "Ecuador":       "https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.0.0/flags/4x3/ec.svg",
+  "Países Bajos":  "https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.0.0/flags/4x3/nl.svg",
+  "Japón":         "https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.0.0/flags/4x3/jp.svg",
+  "Suecia":        "https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.0.0/flags/4x3/se.svg",
+  "Túnez":         "https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.0.0/flags/4x3/tn.svg",
+  "Bélgica":       "https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.0.0/flags/4x3/be.svg",
+  "Egipto":        "https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.0.0/flags/4x3/eg.svg",
+  "Irán":          "https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.0.0/flags/4x3/ir.svg",
+  "Nueva Zelanda": "https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.0.0/flags/4x3/nz.svg",
+  "España":        "https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.0.0/flags/4x3/es.svg",
+  "Cabo Verde":    "https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.0.0/flags/4x3/cv.svg",
+  "Arabia Saudita":"https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.0.0/flags/4x3/sa.svg",
+  "Uruguay":       "https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.0.0/flags/4x3/uy.svg",
+  "Francia":       "https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.0.0/flags/4x3/fr.svg",
+  "Senegal":       "https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.0.0/flags/4x3/sn.svg",
+  "Irak":          "https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.0.0/flags/4x3/iq.svg",
+  "Noruega":       "https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.0.0/flags/4x3/no.svg",
+  "Argentina":     "https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.0.0/flags/4x3/ar.svg",
+  "Argelia":       "https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.0.0/flags/4x3/dz.svg",
+  "Austria":       "https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.0.0/flags/4x3/at.svg",
+  "Jordania":      "https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.0.0/flags/4x3/jo.svg",
+  "Portugal":      "https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.0.0/flags/4x3/pt.svg",
+  "R.D. Congo":    "https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.0.0/flags/4x3/cd.svg",
+  "Uzbekistán":    "https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.0.0/flags/4x3/uz.svg",
+  "Colombia":      "https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.0.0/flags/4x3/co.svg",
+  "Inglaterra":    "https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.0.0/flags/4x3/gb-eng.svg",
+  "Croacia":       "https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.0.0/flags/4x3/hr.svg",
+  "Ghana":         "https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.0.0/flags/4x3/gh.svg",
+  "Panamá":        "https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.0.0/flags/4x3/pa.svg",
 };
 
-// Converts emoji codepoints to twemoji CDN url (works on Windows Chrome)
-const emojiToTwemojiUrl = (emoji) => {
-  const codePoints = [...emoji].map(c => c.codePointAt(0).toString(16)).filter(c => c !== "fe0f" && c !== "200d");
-  // For flags with ZWJ sequences (Scotland, England), keep all parts
-  const allPoints = [...emoji].map(c => c.codePointAt(0).toString(16)).filter(c => c !== "fe0f");
-  const hasTag = allPoints.some(c => parseInt(c,16) >= 0xe0000);
-  if (hasTag) {
-    // subdivision flag (Scotland, England, Wales)
-    const seq = allPoints.filter(c => parseInt(c,16) !== 0x200d).join("-");
-    return `https://cdn.jsdelivr.net/npm/twemoji@14.0.2/assets/svg/${seq}.svg`;
-  }
-  return `https://cdn.jsdelivr.net/npm/twemoji@14.0.2/assets/svg/${codePoints.join("-")}.svg`;
-};
+// Keep FLAGS as alias so all existing code still works
+const FLAGS = FLAG_URLS;
 
 const Flag = ({team, size=32}) => {
-  const emoji = FLAGS[team];
-  if (!emoji) return <span style={{display:"inline-block",width:size,height:Math.round(size*0.75),background:"rgba(255,255,255,.1)",borderRadius:3}}/>;
-  const url = emojiToTwemojiUrl(emoji);
+  const url = FLAG_URLS[team];
+  if (!url) return <span style={{display:"inline-block",width:size,height:Math.round(size*0.75),background:"rgba(255,255,255,.1)",borderRadius:3}}/>;
   return (
     <img
       src={url}
       width={size}
       alt={team}
-      style={{borderRadius:3,display:"block",height:"auto"}}
-      onError={e=>{e.target.replaceWith(Object.assign(document.createElement("span"),{textContent:emoji,style:"font-size:"+size*0.8+"px;line-height:1"}));}}
+      style={{borderRadius:3,display:"block",height:"auto",boxShadow:"0 1px 4px rgba(0,0,0,.3)"}}
     />
   );
 };
-
 const ALL_TEAMS = Object.values(GROUPS).flat();
 
 // Points per phase: [winner, exact]
@@ -95,7 +118,7 @@ const toBsAs = (isoUtc) => {
 
 const GROUP_MATCHES = [
   {id:1,  phase:"groups",group:"A",home:"México",              away:"Sudáfrica",           date:"2026-06-11T20:00:00Z",venue:"Ciudad de México"},
-  {id:2,  phase:"groups",group:"A",home:"Corea del Sur",       away:"Chequia",             date:"2026-06-12T03:00:00Z",venue:"Guadalajara"},
+  {id:2,  phase:"groups",group:"A",home:"Corea del Sur",       away:"Rep. Checa",             date:"2026-06-12T03:00:00Z",venue:"Guadalajara"},
   {id:3,  phase:"groups",group:"B",home:"Canadá",              away:"Bosnia y Herzegovina",date:"2026-06-12T19:00:00Z",venue:"Toronto"},
   {id:4,  phase:"groups",group:"D",home:"Estados Unidos",      away:"Paraguay",            date:"2026-06-13T04:00:00Z",venue:"Los Ángeles"},
   {id:5,  phase:"groups",group:"B",home:"Qatar",               away:"Suiza",               date:"2026-06-13T19:00:00Z",venue:"San Francisco"},
@@ -118,7 +141,7 @@ const GROUP_MATCHES = [
   {id:22, phase:"groups",group:"L",home:"Inglaterra",          away:"Croacia",             date:"2026-06-17T22:00:00Z",venue:"Dallas"},
   {id:23, phase:"groups",group:"L",home:"Ghana",               away:"Panamá",              date:"2026-06-18T00:00:00Z",venue:"Toronto"},
   {id:24, phase:"groups",group:"K",home:"Uzbekistán",          away:"Colombia",            date:"2026-06-18T04:00:00Z",venue:"Ciudad de México"},
-  {id:25, phase:"groups",group:"A",home:"Chequia",             away:"Sudáfrica",           date:"2026-06-18T17:00:00Z",venue:"Atlanta"},
+  {id:25, phase:"groups",group:"A",home:"Rep. Checa",             away:"Sudáfrica",           date:"2026-06-18T17:00:00Z",venue:"Atlanta"},
   {id:26, phase:"groups",group:"B",home:"Suiza",               away:"Bosnia y Herzegovina",date:"2026-06-18T22:00:00Z",venue:"Los Ángeles"},
   {id:27, phase:"groups",group:"B",home:"Canadá",              away:"Qatar",               date:"2026-06-19T01:00:00Z",venue:"Vancouver"},
   {id:28, phase:"groups",group:"A",home:"México",              away:"Corea del Sur",       date:"2026-06-19T03:00:00Z",venue:"Guadalajara"},
@@ -146,7 +169,7 @@ const GROUP_MATCHES = [
   {id:50, phase:"groups",group:"B",home:"Bosnia y Herzegovina",away:"Qatar",               date:"2026-06-24T20:00:00Z",venue:"Seattle"},
   {id:51, phase:"groups",group:"C",home:"Escocia",             away:"Brasil",              date:"2026-06-24T23:00:00Z",venue:"Miami"},
   {id:52, phase:"groups",group:"C",home:"Marruecos",           away:"Haití",               date:"2026-06-24T23:00:00Z",venue:"Atlanta"},
-  {id:53, phase:"groups",group:"A",home:"Chequia",             away:"México",              date:"2026-06-25T02:00:00Z",venue:"Ciudad de México"},
+  {id:53, phase:"groups",group:"A",home:"Rep. Checa",             away:"México",              date:"2026-06-25T02:00:00Z",venue:"Ciudad de México"},
   {id:54, phase:"groups",group:"A",home:"Sudáfrica",           away:"Corea del Sur",       date:"2026-06-25T02:00:00Z",venue:"Monterrey"},
   {id:55, phase:"groups",group:"E",home:"Ecuador",             away:"Alemania",            date:"2026-06-25T21:00:00Z",venue:"Nueva York/NJ"},
   {id:56, phase:"groups",group:"E",home:"Curazao",             away:"Costa de Marfil",     date:"2026-06-25T21:00:00Z",venue:"Filadelfia"},
@@ -170,30 +193,30 @@ const GROUP_MATCHES = [
 
 // slotLabel: shown when no team assigned yet. homeSlot/awaySlot are the descriptions.
 const KNOCKOUT_TEMPLATES = [
-  {id:101,phase:"r32",label:"16avos 1", homeSlot:"1ro Gr. A",awaySlot:"2do Gr. B",date:"2026-06-28T20:00:00Z",venue:"Los Ángeles"},
-  {id:102,phase:"r32",label:"16avos 2", homeSlot:"1ro Gr. B",awaySlot:"3ro Gr. E/I/J",date:"2026-06-29T17:00:00Z",venue:"Houston"},
-  {id:103,phase:"r32",label:"16avos 3", homeSlot:"1ro Gr. C",awaySlot:"3ro Gr. D/F/G",date:"2026-06-29T20:30:00Z",venue:"Boston"},
-  {id:104,phase:"r32",label:"16avos 4", homeSlot:"1ro Gr. D",awaySlot:"2do Gr. E",date:"2026-06-30T01:00:00Z",venue:"Monterrey"},
-  {id:105,phase:"r32",label:"16avos 5", homeSlot:"1ro Gr. E",awaySlot:"3ro Gr. A/B/C",date:"2026-06-30T17:00:00Z",venue:"Dallas"},
-  {id:106,phase:"r32",label:"16avos 6", homeSlot:"1ro Gr. F",awaySlot:"2do Gr. A",date:"2026-06-30T21:00:00Z",venue:"Nueva York/NJ"},
-  {id:107,phase:"r32",label:"16avos 7", homeSlot:"1ro Gr. G",awaySlot:"2do Gr. H",date:"2026-07-01T01:00:00Z",venue:"Ciudad de México"},
-  {id:108,phase:"r32",label:"16avos 8", homeSlot:"1ro Gr. H",awaySlot:"2do Gr. G",date:"2026-07-01T16:00:00Z",venue:"Atlanta"},
-  {id:109,phase:"r32",label:"16avos 9", homeSlot:"1ro Gr. I",awaySlot:"2do Gr. J",date:"2026-07-01T20:00:00Z",venue:"Seattle"},
-  {id:110,phase:"r32",label:"16avos 10",homeSlot:"1ro Gr. J",awaySlot:"2do Gr. I",date:"2026-07-02T00:00:00Z",venue:"San Francisco"},
-  {id:111,phase:"r32",label:"16avos 11",homeSlot:"1ro Gr. K",awaySlot:"2do Gr. L",date:"2026-07-02T20:00:00Z",venue:"Los Ángeles"},
-  {id:112,phase:"r32",label:"16avos 12",homeSlot:"1ro Gr. L",awaySlot:"2do Gr. K",date:"2026-07-03T00:00:00Z",venue:"Toronto"},
-  {id:113,phase:"r32",label:"16avos 13",homeSlot:"2do Gr. C",awaySlot:"3ro Gr. H/I/K",date:"2026-07-03T04:00:00Z",venue:"Vancouver"},
-  {id:114,phase:"r32",label:"16avos 14",homeSlot:"2do Gr. D",awaySlot:"3ro Gr. J/K/L",date:"2026-07-03T18:00:00Z",venue:"Dallas"},
-  {id:115,phase:"r32",label:"16avos 15",homeSlot:"2do Gr. F",awaySlot:"3ro Gr. A/C/D",date:"2026-07-03T22:00:00Z",venue:"Miami"},
-  {id:116,phase:"r32",label:"16avos 16",homeSlot:"2do Gr. B",awaySlot:"3ro Gr. E/F/G",date:"2026-07-04T01:30:00Z",venue:"Kansas City"},
-  {id:201,phase:"r16",label:"8vos 1",   homeSlot:"Gan. 16avos 1",awaySlot:"Gan. 16avos 2",date:"2026-07-04T17:00:00Z",venue:"Houston"},
-  {id:202,phase:"r16",label:"8vos 2",   homeSlot:"Gan. 16avos 3",awaySlot:"Gan. 16avos 4",date:"2026-07-04T21:00:00Z",venue:"Filadelfia"},
-  {id:203,phase:"r16",label:"8vos 3",   homeSlot:"Gan. 16avos 5",awaySlot:"Gan. 16avos 6",date:"2026-07-05T20:00:00Z",venue:"Nueva York/NJ"},
-  {id:204,phase:"r16",label:"8vos 4",   homeSlot:"Gan. 16avos 7",awaySlot:"Gan. 16avos 8",date:"2026-07-06T00:00:00Z",venue:"Ciudad de México"},
-  {id:205,phase:"r16",label:"8vos 5",   homeSlot:"Gan. 16avos 9",awaySlot:"Gan. 16avos 10",date:"2026-07-06T19:00:00Z",venue:"Dallas"},
-  {id:206,phase:"r16",label:"8vos 6",   homeSlot:"Gan. 16avos 11",awaySlot:"Gan. 16avos 12",date:"2026-07-07T00:00:00Z",venue:"Seattle"},
-  {id:207,phase:"r16",label:"8vos 7",   homeSlot:"Gan. 16avos 13",awaySlot:"Gan. 16avos 14",date:"2026-07-07T16:00:00Z",venue:"Atlanta"},
-  {id:208,phase:"r16",label:"8vos 8",   homeSlot:"Gan. 16avos 15",awaySlot:"Gan. 16avos 16",date:"2026-07-08T00:00:00Z",venue:"Vancouver"},
+  {id:101,phase:"r32",label:"16vos 1", homeSlot:"1ro Gr. A",awaySlot:"2do Gr. B",date:"2026-06-28T20:00:00Z",venue:"Los Ángeles"},
+  {id:102,phase:"r32",label:"16vos 2", homeSlot:"1ro Gr. B",awaySlot:"3ro Gr. E/I/J",date:"2026-06-29T17:00:00Z",venue:"Houston"},
+  {id:103,phase:"r32",label:"16vos 3", homeSlot:"1ro Gr. C",awaySlot:"3ro Gr. D/F/G",date:"2026-06-29T20:30:00Z",venue:"Boston"},
+  {id:104,phase:"r32",label:"16vos 4", homeSlot:"1ro Gr. D",awaySlot:"2do Gr. E",date:"2026-06-30T01:00:00Z",venue:"Monterrey"},
+  {id:105,phase:"r32",label:"16vos 5", homeSlot:"1ro Gr. E",awaySlot:"3ro Gr. A/B/C",date:"2026-06-30T17:00:00Z",venue:"Dallas"},
+  {id:106,phase:"r32",label:"16vos 6", homeSlot:"1ro Gr. F",awaySlot:"2do Gr. A",date:"2026-06-30T21:00:00Z",venue:"Nueva York/NJ"},
+  {id:107,phase:"r32",label:"16vos 7", homeSlot:"1ro Gr. G",awaySlot:"2do Gr. H",date:"2026-07-01T01:00:00Z",venue:"Ciudad de México"},
+  {id:108,phase:"r32",label:"16vos 8", homeSlot:"1ro Gr. H",awaySlot:"2do Gr. G",date:"2026-07-01T16:00:00Z",venue:"Atlanta"},
+  {id:109,phase:"r32",label:"16vos 9", homeSlot:"1ro Gr. I",awaySlot:"2do Gr. J",date:"2026-07-01T20:00:00Z",venue:"Seattle"},
+  {id:110,phase:"r32",label:"16vos 10",homeSlot:"1ro Gr. J",awaySlot:"2do Gr. I",date:"2026-07-02T00:00:00Z",venue:"San Francisco"},
+  {id:111,phase:"r32",label:"16vos 11",homeSlot:"1ro Gr. K",awaySlot:"2do Gr. L",date:"2026-07-02T20:00:00Z",venue:"Los Ángeles"},
+  {id:112,phase:"r32",label:"16vos 12",homeSlot:"1ro Gr. L",awaySlot:"2do Gr. K",date:"2026-07-03T00:00:00Z",venue:"Toronto"},
+  {id:113,phase:"r32",label:"16vos 13",homeSlot:"2do Gr. C",awaySlot:"3ro Gr. H/I/K",date:"2026-07-03T04:00:00Z",venue:"Vancouver"},
+  {id:114,phase:"r32",label:"16vos 14",homeSlot:"2do Gr. D",awaySlot:"3ro Gr. J/K/L",date:"2026-07-03T18:00:00Z",venue:"Dallas"},
+  {id:115,phase:"r32",label:"16vos 15",homeSlot:"2do Gr. F",awaySlot:"3ro Gr. A/C/D",date:"2026-07-03T22:00:00Z",venue:"Miami"},
+  {id:116,phase:"r32",label:"16vos 16",homeSlot:"2do Gr. B",awaySlot:"3ro Gr. E/F/G",date:"2026-07-04T01:30:00Z",venue:"Kansas City"},
+  {id:201,phase:"r16",label:"8vos 1",   homeSlot:"Gan. 16vos 1",awaySlot:"Gan. 16vos 2",date:"2026-07-04T17:00:00Z",venue:"Houston"},
+  {id:202,phase:"r16",label:"8vos 2",   homeSlot:"Gan. 16vos 3",awaySlot:"Gan. 16vos 4",date:"2026-07-04T21:00:00Z",venue:"Filadelfia"},
+  {id:203,phase:"r16",label:"8vos 3",   homeSlot:"Gan. 16vos 5",awaySlot:"Gan. 16vos 6",date:"2026-07-05T20:00:00Z",venue:"Nueva York/NJ"},
+  {id:204,phase:"r16",label:"8vos 4",   homeSlot:"Gan. 16vos 7",awaySlot:"Gan. 16vos 8",date:"2026-07-06T00:00:00Z",venue:"Ciudad de México"},
+  {id:205,phase:"r16",label:"8vos 5",   homeSlot:"Gan. 16vos 9",awaySlot:"Gan. 16vos 10",date:"2026-07-06T19:00:00Z",venue:"Dallas"},
+  {id:206,phase:"r16",label:"8vos 6",   homeSlot:"Gan. 16vos 11",awaySlot:"Gan. 16vos 12",date:"2026-07-07T00:00:00Z",venue:"Seattle"},
+  {id:207,phase:"r16",label:"8vos 7",   homeSlot:"Gan. 16vos 13",awaySlot:"Gan. 16vos 14",date:"2026-07-07T16:00:00Z",venue:"Atlanta"},
+  {id:208,phase:"r16",label:"8vos 8",   homeSlot:"Gan. 16vos 15",awaySlot:"Gan. 16vos 16",date:"2026-07-08T00:00:00Z",venue:"Vancouver"},
   {id:301,phase:"qf", label:"Cuartos 1",homeSlot:"Gan. 8vos 1",awaySlot:"Gan. 8vos 2",date:"2026-07-09T21:00:00Z",venue:"Boston"},
   {id:302,phase:"qf", label:"Cuartos 2",homeSlot:"Gan. 8vos 3",awaySlot:"Gan. 8vos 4",date:"2026-07-10T23:00:00Z",venue:"Los Ángeles"},
   {id:303,phase:"qf", label:"Cuartos 3",homeSlot:"Gan. 8vos 5",awaySlot:"Gan. 8vos 6",date:"2026-07-11T22:00:00Z",venue:"Miami"},
@@ -205,7 +228,7 @@ const KNOCKOUT_TEMPLATES = [
 ];
 
 const PHASE_LABELS = {
-  groups:"Fase de Grupos", r32:"16avos de Final", r16:"8vos de Final",
+  groups:"Fase de Grupos", r32:"16vos de Final", r16:"8vos de Final",
   qf:"Cuartos de Final", sf:"Semifinales", "3rd":"3er Puesto", final:"FINAL 🏆"
 };
 
@@ -318,7 +341,7 @@ const RulesModal = ({onClose}) => (
         <div style={{color:"rgba(255,255,255,.5)",fontSize:11,fontWeight:700,letterSpacing:1,marginBottom:10,textTransform:"uppercase"}}>Sistema de puntuación</div>
         {[
           {fase:"Fase de Grupos",win:3,exact:3,max:6,icon:"⚽"},
-          {fase:"16avos y 8vos",win:4,exact:4,max:8,icon:"⚔️"},
+          {fase:"16vos y 8vos",win:4,exact:4,max:8,icon:"⚔️"},
           {fase:"Cuartos, Semis y 3er Puesto",win:5,exact:5,max:10,icon:"🔥"},
           {fase:"Final",win:7,exact:7,max:14,icon:"🏆"},
         ].map(row=>(
@@ -672,7 +695,7 @@ export default function App() {
             {selectedPhase==="groups"&&(
               <div style={{display:"flex",gap:5,flexWrap:"wrap",marginBottom:12}}>
                 {Object.keys(GROUPS).map(g=>(
-                  <button key={g} className="group-btn" onClick={()=>setSelectedGroup(g)} style={{background:selectedGroup===g?"rgba(255,215,0,.18)":"transparent",color:selectedGroup===g?"#FFD700":"rgba(255,255,255,.45)",borderColor:selectedGroup===g?"rgba(255,215,0,.5)":"rgba(255,255,255,.15)"}}>Gr. {g}</button>
+                  <button key={g} className="group-btn" onClick={()=>setSelectedGroup(g)} style={{background:selectedGroup===g?"rgba(255,215,0,.18)":"transparent",color:selectedGroup===g?"#FFD700":"rgba(255,255,255,.45)",borderColor:selectedGroup===g?"rgba(255,215,0,.5)":"rgba(255,255,255,.15)"}}>Grupo {g}</button>
                 ))}
               </div>
             )}
@@ -771,7 +794,7 @@ export default function App() {
             {selectedPhase==="groups"&&(
               <div style={{display:"flex",gap:5,flexWrap:"wrap",marginBottom:12}}>
                 {Object.keys(GROUPS).map(g=>(
-                  <button key={g} className="group-btn" onClick={()=>setSelectedGroup(g)} style={{background:selectedGroup===g?"rgba(255,215,0,.18)":"transparent",color:selectedGroup===g?"#FFD700":"rgba(255,255,255,.45)",borderColor:selectedGroup===g?"rgba(255,215,0,.5)":"rgba(255,255,255,.15)"}}>Gr. {g}</button>
+                  <button key={g} className="group-btn" onClick={()=>setSelectedGroup(g)} style={{background:selectedGroup===g?"rgba(255,215,0,.18)":"transparent",color:selectedGroup===g?"#FFD700":"rgba(255,255,255,.45)",borderColor:selectedGroup===g?"rgba(255,215,0,.5)":"rgba(255,255,255,.15)"}}>Grupo {g}</button>
                 ))}
               </div>
             )}
