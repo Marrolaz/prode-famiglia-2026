@@ -284,6 +284,35 @@ function calcStats(username, predictions, results, knockoutMatches) {
     pctExact: played>0 ? Math.round(exact/played*100) : 0, byPhase };
 }
 
+// ── RANKING HISTORY ───────────────────────────────────────────
+function calcRankingHistory(username, users, predictions, results, knockoutMatches) {
+  const allMatches = [...GROUP_MATCHES, ...knockoutMatches]
+    .filter(m=>{const r=results[m.id];return r&&r.home!=null&&r.home!==""&&r.away!=null&&r.away!=="";})
+    .sort((a,b)=>new Date(a.date)-new Date(b.date));
+  if(allMatches.length===0) return [];
+  const partialResults={};
+  const history=[];
+  const step = Math.max(1, Math.floor(allMatches.length/12));
+  allMatches.forEach((m,idx)=>{
+    partialResults[m.id]=results[m.id];
+    const isLast = idx===allMatches.length-1;
+    if(idx%step!==0&&!isLast) return;
+    const lbSnap=users.filter(u=>!u.isAdmin).map(u=>({
+      username:u.username,
+      pts:(()=>{
+        let p=0;
+        if(predictions[u.username]?.champion&&results.champion&&predictions[u.username].champion===results.champion) p+=10;
+        [...GROUP_MATCHES,...knockoutMatches].forEach(gm=>{if(partialResults[gm.id]) p+=calcPoints(predictions[u.username]?.matches?.[gm.id],partialResults[gm.id]||{},gm.phase);});
+        return p;
+      })()
+    })).sort((a,b)=>b.pts-a.pts);
+    const rank=lbSnap.findIndex(x=>x.username===username)+1;
+    const pts=lbSnap.find(x=>x.username===username)?.pts||0;
+    history.push({label:"P"+(idx+1),rank,total:lbSnap.length,pts});
+  });
+  return history;
+}
+
 // ── CANVAS ────────────────────────────────────────────────────
 const ParticleCanvas = () => {
   const ref=useRef(null);
@@ -900,6 +929,57 @@ export default function App() {
                   ))}
                 </div>
               </div>
+
+              {/* GRÁFICO DE POSICIONES */}
+              {(()=>{
+                const history = calcRankingHistory(viewUser, users, predictions, results, knockoutMatches);
+                if(history.length<2) return <div className="glass" style={{borderRadius:14,padding:"14px 16px",marginBottom:14,textAlign:"center",color:"rgba(255,255,255,.25)",fontSize:13}}>📈 El gráfico aparece a partir del 2do resultado cargado</div>;
+                const maxRank = history[0]?.total||users.filter(u=>!u.isAdmin).length||1;
+                const H=120, W_PAD=28;
+                const pts_list = history.map(h=>h.pts);
+                const maxPts = Math.max(...pts_list,1);
+                const n=history.length;
+                // SVG path for rank (inverted: rank 1 = top)
+                const rankPoints = history.map((h,i)=>{
+                  const x = W_PAD + (i/(n-1))*(280-W_PAD*2);
+                  const y = 10 + ((h.rank-1)/(maxRank-1||1))*(H-20);
+                  return `${x},${y}`;
+                }).join(" ");
+                const rankPath = "M "+rankPoints.split(" ").join(" L ");
+                // Area fill
+                const firstX = W_PAD;
+                const lastX = W_PAD + (280-W_PAD*2);
+                const areaPath = rankPath + ` L ${lastX},${H} L ${firstX},${H} Z`;
+                return (
+                  <div className="glass" style={{borderRadius:14,padding:"14px 16px",marginBottom:14}}>
+                    <div style={{color:"rgba(255,255,255,.5)",fontSize:11,fontWeight:700,letterSpacing:1,marginBottom:10,textTransform:"uppercase"}}>📈 Posición en la tabla (1 = mejor)</div>
+                    <svg viewBox={`0 0 280 ${H+20}`} style={{width:"100%",overflow:"visible"}}>
+                      {/* Grid lines */}
+                      {[1,Math.ceil(maxRank/2),maxRank].map(r=>{
+                        const y=10+((r-1)/(maxRank-1||1))*(H-20);
+                        return <g key={r}><line x1={W_PAD} y1={y} x2={280-W_PAD} y2={y} stroke="rgba(255,255,255,.06)" strokeWidth="1"/><text x={W_PAD-4} y={y+4} fontSize="8" fill="rgba(255,255,255,.3)" textAnchor="end">#{r}</text></g>;
+                      })}
+                      {/* Area */}
+                      <path d={areaPath} fill="rgba(79,158,248,.1)"/>
+                      {/* Line */}
+                      <path d={rankPath} fill="none" stroke="#4f9ef8" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+                      {/* Dots */}
+                      {history.map((h,i)=>{
+                        const x=W_PAD+(i/(n-1))*(280-W_PAD*2);
+                        const y=10+((h.rank-1)/(maxRank-1||1))*(H-20);
+                        const isFirst=h.rank===1;
+                        return <g key={i}>
+                          <circle cx={x} cy={y} r={isFirst?5:3.5} fill={isFirst?"#FFD700":"#4f9ef8"} stroke={isFirst?"rgba(255,215,0,.3)":"rgba(79,158,248,.3)"} strokeWidth={isFirst?3:2}/>
+                          {i===history.length-1&&<text x={x} y={y-8} fontSize="9" fill="#4ade80" textAnchor="middle" fontWeight="700">#{h.rank}</text>}
+                        </g>;
+                      })}
+                    </svg>
+                    <div style={{display:"flex",justifyContent:"space-between",marginTop:4,fontSize:10,color:"rgba(255,255,255,.25)"}}>
+                      <span>Inicio</span><span>Partido {history[history.length-1]?.label?.replace("P","")}</span>
+                    </div>
+                  </div>
+                );
+              })()}
 
               {/* Campeón pronosticado */}
               {(()=>{const chPick=predictions[viewUser]?.champion; return chPick?(
