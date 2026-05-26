@@ -329,67 +329,61 @@ const GlobalCSS=()=>(
 
 // ─── RULES MODAL ─────────────────────────────────────────────
 const RulesModal = ({onClose}) => (
-  <div style={{position:"fixed",inset:0,zIndex:1000,background:"rgba(0,0,0,.75)",backdropFilter:"blur(8px)",display:"flex",alignItems:"center",justifyContent:"center",padding:16}} onClick={onClose}>
-    <div className="glass" style={{borderRadius:24,padding:"28px 24px",maxWidth:420,width:"100%",animation:"modalIn .25s ease-out",boxShadow:"0 32px 80px rgba(0,0,0,.6)"}} onClick={e=>e.stopPropagation()}>
-      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:20}}>
-        <h2 style={{fontFamily:"'Bangers',cursive",color:"#FFD700",fontSize:26,letterSpacing:2}}>📋 REGLAS Y PUNTOS</h2>
-        <button onClick={onClose} style={{background:"rgba(255,255,255,.1)",border:"none",borderRadius:"50%",width:32,height:32,color:"rgba(255,255,255,.7)",fontSize:18,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}>✕</button>
+  <div style={{position:"fixed",inset:0,zIndex:1000,background:"rgba(0,0,0,.75)",backdropFilter:"blur(8px)",display:"flex",alignItems:"center",justifyContent:"center",padding:12}} onClick={onClose}>
+    <div className="glass" style={{borderRadius:20,padding:"14px 16px",maxWidth:400,width:"100%",animation:"modalIn .25s ease-out",boxShadow:"0 32px 80px rgba(0,0,0,.6)"}} onClick={e=>e.stopPropagation()}>
+      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10}}>
+        <h2 style={{fontFamily:"'Bangers',cursive",color:"#FFD700",fontSize:20,letterSpacing:2}}>📋 REGLAS Y PUNTOS</h2>
+        <button onClick={onClose} style={{background:"rgba(255,255,255,.1)",border:"none",borderRadius:"50%",width:26,height:26,color:"rgba(255,255,255,.7)",fontSize:15,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}>✕</button>
       </div>
 
-      {/* Inscripción */}
-      <div style={{background:"rgba(255,215,0,.1)",border:"1px solid rgba(255,215,0,.35)",borderRadius:12,padding:"11px 16px",marginBottom:18,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-        <span style={{color:"rgba(255,255,255,.7)",fontSize:14,fontWeight:600}}>💰 Valor de la inscripción</span>
-        <span style={{fontFamily:"'Bangers',cursive",color:"#FFD700",fontSize:22,letterSpacing:1}}>$15.000</span>
+      <div style={{background:"rgba(255,215,0,.1)",border:"1px solid rgba(255,215,0,.35)",borderRadius:9,padding:"6px 12px",marginBottom:9,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+        <span style={{color:"rgba(255,255,255,.7)",fontSize:12,fontWeight:600}}>💰 Valor de la inscripción</span>
+        <span style={{fontFamily:"'Bangers',cursive",color:"#FFD700",fontSize:17,letterSpacing:1}}>$15.000</span>
       </div>
 
-      {/* Scoring table */}
-      <div style={{marginBottom:18}}>
-        <div style={{color:"rgba(255,255,255,.5)",fontSize:11,fontWeight:700,letterSpacing:1,marginBottom:10,textTransform:"uppercase"}}>Sistema de puntuación</div>
+      <div style={{color:"rgba(255,255,255,.5)",fontSize:10,fontWeight:700,letterSpacing:1,marginBottom:5,textTransform:"uppercase"}}>Sistema de puntuación</div>
+      <div style={{marginBottom:9}}>
         {[
           {fase:"Fase de Grupos",win:3,exact:3,max:6,icon:"⚽"},
           {fase:"16vos y 8vos",win:4,exact:4,max:8,icon:"⚔️"},
           {fase:"Cuartos, Semis y 3er Puesto",win:5,exact:5,max:10,icon:"🔥"},
           {fase:"Final",win:7,exact:7,max:14,icon:"🏆"},
         ].map(row=>(
-          <div key={row.fase} style={{display:"flex",alignItems:"center",gap:10,padding:"9px 12px",borderRadius:10,background:"rgba(255,255,255,.04)",border:"1px solid rgba(255,255,255,.07)",marginBottom:6}}>
-            <span style={{fontSize:18,minWidth:24}}>{row.icon}</span>
+          <div key={row.fase} style={{display:"flex",alignItems:"center",gap:8,padding:"5px 9px",borderRadius:7,background:"rgba(255,255,255,.04)",border:"1px solid rgba(255,255,255,.07)",marginBottom:3}}>
+            <span style={{fontSize:13,minWidth:18}}>{row.icon}</span>
             <div style={{flex:1}}>
-              <div style={{color:"#fff",fontSize:13,fontWeight:700}}>{row.fase}</div>
-              <div style={{color:"rgba(255,255,255,.45)",fontSize:11,marginTop:1}}>
-                Ganador/empate: <span style={{color:"#4ade80",fontWeight:700}}>+{row.win} pts</span>
-                {"  ·  "}
-                Resultado exacto: <span style={{color:"#FFD700",fontWeight:700}}>+{row.exact} pts</span>
+              <div style={{color:"#fff",fontSize:11,fontWeight:700}}>{row.fase}</div>
+              <div style={{color:"rgba(255,255,255,.45)",fontSize:10}}>
+                Ganador: <span style={{color:"#4ade80",fontWeight:700}}>+{row.win}</span>{" · "}Exacto: <span style={{color:"#FFD700",fontWeight:700}}>+{row.exact}</span>
               </div>
             </div>
-            <div style={{fontFamily:"'Bangers',cursive",color:"#FFD700",fontSize:18,minWidth:36,textAlign:"right"}}>
-              {row.max}<span style={{fontSize:11,color:"rgba(255,255,255,.35)",fontFamily:"'Plus Jakarta Sans',sans-serif",fontWeight:600}}> max</span>
+            <div style={{fontFamily:"'Bangers',cursive",color:"#FFD700",fontSize:15,minWidth:30,textAlign:"right"}}>
+              {row.max}<span style={{fontSize:9,color:"rgba(255,255,255,.35)",fontFamily:"'Plus Jakarta Sans',sans-serif",fontWeight:600}}> max</span>
             </div>
           </div>
         ))}
-        <div style={{display:"flex",alignItems:"center",gap:10,padding:"9px 12px",borderRadius:10,background:"rgba(255,215,0,.08)",border:"1px solid rgba(255,215,0,.2)",marginTop:8}}>
-          <span style={{fontSize:18}}>🌟</span>
+        <div style={{display:"flex",alignItems:"center",gap:8,padding:"5px 9px",borderRadius:7,background:"rgba(255,215,0,.08)",border:"1px solid rgba(255,215,0,.2)",marginTop:3}}>
+          <span style={{fontSize:13}}>🌟</span>
           <div style={{flex:1}}>
-            <div style={{color:"#FFD700",fontSize:13,fontWeight:700}}>Campeón del Mundial</div>
-            <div style={{color:"rgba(255,255,255,.45)",fontSize:11,marginTop:1}}>Debe pronosticarse antes del primer partido</div>
+            <div style={{color:"#FFD700",fontSize:11,fontWeight:700}}>Campeón del Mundial</div>
+            <div style={{color:"rgba(255,255,255,.45)",fontSize:10}}>Antes del primer partido</div>
           </div>
-          <div style={{fontFamily:"'Bangers',cursive",color:"#FFD700",fontSize:18}}>10 pts</div>
+          <div style={{fontFamily:"'Bangers',cursive",color:"#FFD700",fontSize:15}}>10 pts</div>
         </div>
       </div>
 
-      {/* Rules */}
-      <div style={{color:"rgba(255,255,255,.5)",fontSize:11,fontWeight:700,letterSpacing:1,marginBottom:10,textTransform:"uppercase"}}>Reglas generales</div>
+      <div style={{color:"rgba(255,255,255,.5)",fontSize:10,fontWeight:700,letterSpacing:1,marginBottom:5,textTransform:"uppercase"}}>Reglas generales</div>
       {[
-        "🔒 Cada partido se cierra 30 minutos antes del horario de inicio.",
-        "⏱️ En eliminatorias, el resultado es el de los 120 minutos (incluye alargue si lo hay). Los penales no cuentan para el marcador.",
-        "📅 El pronóstico de campeón cierra 30 min antes del primer partido (11 Jun, 16:00 hs ARG).",
-        "👑 Solo el administrador puede cargar los resultados y los equipos de las eliminatorias.",
+        "🔒 Cada partido cierra 30 min antes del inicio.",
+        "⏱️ En eliminatorias el resultado es a 120 min (con alargue). Penales no cuentan.",
+        "📅 Campeón cierra 30 min antes del primer partido (11 Jun, 16:00 hs).",
+        "👑 Solo el admin carga resultados y equipos de eliminatorias.",
       ].map((rule,i)=>(
-        <div key={i} style={{fontSize:13,color:"rgba(255,255,255,.6)",padding:"7px 0",borderBottom:i<3?"1px solid rgba(255,255,255,.06)":"none",lineHeight:1.5}}>{rule}</div>
+        <div key={i} style={{fontSize:11,color:"rgba(255,255,255,.6)",padding:"4px 0",borderBottom:i<3?"1px solid rgba(255,255,255,.06)":"none",lineHeight:1.4}}>{rule}</div>
       ))}
     </div>
   </div>
 );
-
 // ─── MATCH CARD ───────────────────────────────────────────────
 const MatchCard = ({match, pred={}, real={}, locked, isAdmin, onPredChange, onResultChange}) => {
   const {label,time}=toBsAs(match.date);
