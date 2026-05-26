@@ -479,7 +479,7 @@ const MatchCard = ({match, pred={}, real={}, locked, isAdmin, onPredChange, onRe
         <div style={{display:"flex",alignItems:"center",gap:6}}>
           {!isAdmin&&locked&&<span style={{fontSize:11,color:"#ef4444",fontWeight:600}}>🔒</span>}
           {!isAdmin&&hasResult&&<span style={{fontSize:13,fontWeight:800,color:pts===winPts+exactPts?"#4ade80":pts===winPts?"#facc15":"#f87171"}}>{pts>0?`+${pts}`:"-0"} pts</span>}
-          {showOthersBtn&&<button onClick={onShowOthers} style={{background:"rgba(255,255,255,.08)",border:"1px solid rgba(255,255,255,.15)",borderRadius:6,color:"rgba(255,255,255,.6)",fontSize:10,padding:"2px 7px",cursor:"pointer",fontFamily:"'Plus Jakarta Sans',sans-serif",fontWeight:600"}}>👀</button>}
+          {showOthersBtn&&<button onClick={onShowOthers} style={{background:"rgba(255,255,255,.08)",border:"1px solid rgba(255,255,255,.15)",borderRadius:6,color:"rgba(255,255,255,.6)",fontSize:10,padding:"2px 7px",cursor:"pointer",fontFamily:"'Plus Jakarta Sans',sans-serif",fontWeight:600}}>👀</button>}
         </div>
       </div>
       <div style={{display:"flex",alignItems:"center",gap:8,justifyContent:"center"}}>
