@@ -335,7 +335,7 @@ const GlobalCSS=()=>(
     .glass-gold{background:rgba(255,215,0,.07);backdrop-filter:blur(18px);border:1px solid rgba(255,215,0,.2)}
     .btn-gold{background:linear-gradient(135deg,#f7d354,#e09000);color:#1a0800;border:none;cursor:pointer;font-family:'Bangers',cursive;letter-spacing:1.5px;transition:all .18s;border-radius:14px}
     .btn-gold:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(245,200,66,.45)}
-    .tab-btn{background:transparent;border:none;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;transition:all .18s;padding:9px 14px;border-radius:10px;font-size:13px;white-space:nowrap}
+    .tab-btn{background:transparent;border:none;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;transition:all .18s;padding:8px 11px;border-radius:10px;font-size:12px;white-space:nowrap}
     .tab-btn.active{background:rgba(255,215,0,.14);color:#FFD700;box-shadow:inset 0 0 0 1px rgba(255,215,0,.25)}
     .tab-btn:not(.active){color:rgba(255,255,255,.42)}
     .tab-btn:hover:not(.active){color:rgba(255,255,255,.75);background:rgba(255,255,255,.06)}
