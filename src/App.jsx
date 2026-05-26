@@ -472,7 +472,7 @@ const MatchCard = ({match, pred={}, real={}, locked, isAdmin, onPredChange, onRe
         <div style={{display:"flex",alignItems:"center",gap:6,flexWrap:"wrap"}}>
           <span style={{fontSize:11,color:"rgba(255,255,255,.35)",fontWeight:600}}>{label}</span>
           <span style={{background:"rgba(255,215,0,.12)",border:"1px solid rgba(255,215,0,.25)",borderRadius:6,padding:"1px 7px",fontSize:11,color:"#FFD700",fontWeight:700}}>{time} hs</span>
-          {match.group && <span style={{fontSize:10,color:"rgba(255,255,255,.3)",background:"rgba(255,255,255,.05)",borderRadius:5,padding:"1px 6px"}}>Gr. {match.group}</span>}
+          {match.group && <span style={{fontSize:10,color:"rgba(255,255,255,.3)",background:"rgba(255,255,255,.05)",borderRadius:5,padding:"1px 6px"}}>Grupo {match.group}</span>}
           {match.label && !match.group && <span style={{fontSize:10,color:"rgba(255,255,255,.25)",background:"rgba(255,255,255,.04)",borderRadius:5,padding:"1px 6px"}}>{match.label}</span>}
           {isKO && <span style={{fontSize:10,color:"rgba(116,172,223,.6)",background:"rgba(116,172,223,.08)",borderRadius:5,padding:"1px 6px",border:"1px solid rgba(116,172,223,.15)"}}>120 min</span>}
         </div>
@@ -724,8 +724,8 @@ export default function App() {
       <div style={{position:"sticky",top:55,zIndex:99,background:"rgba(6,13,31,.85)",backdropFilter:"blur(16px)",borderBottom:"1px solid rgba(255,255,255,.07)",display:"flex",gap:2,padding:"6px 10px",overflowX:"auto"}}>
         {!currentUser?.isAdmin&&<button className={`tab-btn${activeTab==="prode"?" active":""}`} onClick={()=>setActiveTab("prode")}>⚽ Mi Prode</button>}
         {!currentUser?.isAdmin&&<button className={`tab-btn${activeTab==="campeon"?" active":""}`} onClick={()=>setActiveTab("campeon")}>🏆 Campeón</button>}
-        {!currentUser?.isAdmin&&<button className={`tab-btn${activeTab==="stats"?" active":""}`} onClick={()=>{setActiveTab("stats");setStatsUser(currentUser?.username);}}>📈 Mis Stats</button>}
         <button className={`tab-btn${activeTab==="tabla"?" active":""}`} onClick={()=>setActiveTab("tabla")}>📊 Tabla</button>
+        {!currentUser?.isAdmin&&<button className={`tab-btn${activeTab==="stats"?" active":""}`} onClick={()=>{setActiveTab("stats");setStatsUser(currentUser?.username);}}>📈 Mis Stats</button>}
         {currentUser?.isAdmin&&<button className={`tab-btn${activeTab==="admin"?" active":""}`} onClick={()=>setActiveTab("admin")}>👑 Resultados</button>}
         {currentUser?.isAdmin&&<button className={`tab-btn${activeTab==="slots"?" active":""}`} onClick={()=>setActiveTab("slots")}>🔧 Equipos KO</button>}
         {currentUser?.isAdmin&&<button className={`tab-btn${activeTab==="champAdmin"?" active":""}`} onClick={()=>setActiveTab("champAdmin")}>🏆 Campeón</button>}
@@ -856,21 +856,6 @@ export default function App() {
                       <div style={{color:"rgba(255,255,255,.4)",fontSize:11,marginTop:2}}>{label}</div>
                     </div>
                   ))}
-                </div>
-              </div>
-
-              {/* Streaks */}
-              <div className="glass" style={{borderRadius:14,padding:"14px 16px",marginBottom:14}}>
-                <div style={{color:"rgba(255,255,255,.5)",fontSize:11,fontWeight:700,letterSpacing:1,marginBottom:10,textTransform:"uppercase"}}>Rachas</div>
-                <div style={{display:"flex",gap:10}}>
-                  <div style={{flex:1,background:"rgba(74,222,128,.08)",border:"1px solid rgba(74,222,128,.2)",borderRadius:10,padding:"10px 14px",textAlign:"center"}}>
-                    <div style={{fontFamily:"'Bangers',cursive",color:"#4ade80",fontSize:28,lineHeight:1}}>{stats.currentStreak}</div>
-                    <div style={{color:"rgba(255,255,255,.4)",fontSize:11,marginTop:2}}>Racha actual</div>
-                  </div>
-                  <div style={{flex:1,background:"rgba(255,215,0,.08)",border:"1px solid rgba(255,215,0,.2)",borderRadius:10,padding:"10px 14px",textAlign:"center"}}>
-                    <div style={{fontFamily:"'Bangers',cursive",color:"#FFD700",fontSize:28,lineHeight:1}}>{stats.bestStreak}</div>
-                    <div style={{color:"rgba(255,255,255,.4)",fontSize:11,marginTop:2}}>Mejor racha</div>
-                  </div>
                 </div>
               </div>
 
