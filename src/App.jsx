@@ -763,9 +763,9 @@ export default function App() {
 
       {/* TABS */}
       <div style={{position:"sticky",top:55,zIndex:99,background:"rgba(6,13,31,.85)",backdropFilter:"blur(16px)",borderBottom:"1px solid rgba(255,255,255,.07)",display:"flex",gap:2,padding:"6px 10px",overflowX:"auto"}}>
+        <button className={`tab-btn${activeTab==="tabla"?" active":""}`} onClick={()=>setActiveTab("tabla")}>📊 Tabla</button>
         {!currentUser?.isAdmin&&<button className={`tab-btn${activeTab==="prode"?" active":""}`} onClick={()=>setActiveTab("prode")}>⚽ Mi Prode</button>}
         {!currentUser?.isAdmin&&<button className={`tab-btn${activeTab==="campeon"?" active":""}`} onClick={()=>setActiveTab("campeon")}>🏆 Campeón</button>}
-        <button className={`tab-btn${activeTab==="tabla"?" active":""}`} onClick={()=>setActiveTab("tabla")}>📊 Tabla</button>
         <button className={`tab-btn${activeTab==="grupos"?" active":""}`} onClick={()=>setActiveTab("grupos")}>🌍 Grupos</button>
         {!currentUser?.isAdmin&&<button className={`tab-btn${activeTab==="stats"?" active":""}`} onClick={()=>{setActiveTab("stats");setStatsUser(currentUser?.username);}}>📈 Mis Stats</button>}
         {currentUser?.isAdmin&&<button className={`tab-btn${activeTab==="admin"?" active":""}`} onClick={()=>setActiveTab("admin")}>👑 Resultados</button>}
@@ -963,37 +963,37 @@ export default function App() {
                     <span style={{fontFamily:"'Bangers',cursive",color:"#FFD700",fontSize:16,letterSpacing:2}}>GRUPO {g}</span>
                   </div>
                   <div style={{overflowX:"auto"}}>
-                    <table style={{width:"100%",borderCollapse:"collapse",fontFamily:"'Plus Jakarta Sans',sans-serif",fontSize:12}}>
+                    <table style={{width:"100%",borderCollapse:"collapse",fontFamily:"'Plus Jakarta Sans',sans-serif",fontSize:11}}>
                       <thead>
                         <tr style={{borderBottom:"1px solid rgba(255,255,255,.1)"}}>
-                          <td style={{padding:"6px 8px",color:"rgba(255,255,255,.4)",fontWeight:700,width:24}}>#</td>
-                          <td style={{padding:"6px 8px",color:"rgba(255,255,255,.4)",fontWeight:700}}>Equipo</td>
-                          <td style={{padding:"6px 8px",color:"rgba(255,255,255,.4)",fontWeight:700,textAlign:"center"}}>PTS</td>
-                          <td style={{padding:"6px 8px",color:"rgba(255,255,255,.4)",fontWeight:700,textAlign:"center"}}>J</td>
-                          <td style={{padding:"6px 8px",color:"rgba(255,255,255,.4)",fontWeight:700,textAlign:"center"}}>Gol</td>
-                          <td style={{padding:"6px 8px",color:"rgba(255,255,255,.4)",fontWeight:700,textAlign:"center"}}>+/-</td>
-                          <td style={{padding:"6px 8px",color:"rgba(255,255,255,.4)",fontWeight:700,textAlign:"center"}}>G</td>
-                          <td style={{padding:"6px 8px",color:"rgba(255,255,255,.4)",fontWeight:700,textAlign:"center"}}>E</td>
-                          <td style={{padding:"6px 8px",color:"rgba(255,255,255,.4)",fontWeight:700,textAlign:"center"}}>P</td>
+                          <td style={{padding:"5px 5px",color:"rgba(255,255,255,.4)",fontWeight:700,width:20}}>#</td>
+                          <td style={{padding:"5px 5px",color:"rgba(255,255,255,.4)",fontWeight:700}}>Equipo</td>
+                          <td style={{padding:"5px 5px",color:"rgba(255,255,255,.4)",fontWeight:700,textAlign:"center"}}>PTS</td>
+                          <td style={{padding:"5px 5px",color:"rgba(255,255,255,.4)",fontWeight:700,textAlign:"center"}}>J</td>
+                          <td style={{padding:"5px 5px",color:"rgba(255,255,255,.4)",fontWeight:700,textAlign:"center"}}>Gol</td>
+                          <td style={{padding:"5px 5px",color:"rgba(255,255,255,.4)",fontWeight:700,textAlign:"center"}}>+/-</td>
+                          <td style={{padding:"5px 5px",color:"rgba(255,255,255,.4)",fontWeight:700,textAlign:"center"}}>G</td>
+                          <td style={{padding:"5px 5px",color:"rgba(255,255,255,.4)",fontWeight:700,textAlign:"center"}}>E</td>
+                          <td style={{padding:"5px 5px",color:"rgba(255,255,255,.4)",fontWeight:700,textAlign:"center"}}>P</td>
                         </tr>
                       </thead>
                       <tbody>
                         {standing.map((row,i) => (
                           <tr key={row.team} style={{borderBottom:i<3?"1px solid rgba(255,255,255,.06)":"none",background:i%2===0?"rgba(255,255,255,.02)":"transparent"}}>
-                            <td style={{padding:"7px 8px",color:"rgba(255,255,255,.5)",fontWeight:700,textAlign:"center"}}>{i+1}</td>
-                            <td style={{padding:"7px 8px"}}>
-                              <div style={{display:"flex",alignItems:"center",gap:6}}>
-                                <Flag team={row.team} size={18}/>
-                                <span style={{color:"#fff",fontWeight:600,whiteSpace:"nowrap"}}>{row.team}</span>
+                            <td style={{padding:"6px 5px",color:"rgba(255,255,255,.5)",fontWeight:700,textAlign:"center"}}>{i+1}</td>
+                            <td style={{padding:"6px 5px"}}>
+                              <div style={{display:"flex",alignItems:"center",gap:5}}>
+                                <Flag team={row.team} size={16}/>
+                                <span style={{color:"#fff",fontWeight:600,whiteSpace:"nowrap",fontSize:11}}>{row.team}</span>
                               </div>
                             </td>
-                            <td style={{padding:"7px 8px",textAlign:"center",fontFamily:"'Bangers',cursive",fontSize:15,color:"#FFD700"}}>{row.pts}</td>
-                            <td style={{padding:"7px 8px",textAlign:"center",color:"rgba(255,255,255,.6)"}}>{row.j}</td>
-                            <td style={{padding:"7px 8px",textAlign:"center",color:"rgba(255,255,255,.5)",fontFamily:"'Plus Jakarta Sans',sans-serif"}}>{row.gf}:{row.gc}</td>
-                            <td style={{padding:"7px 8px",textAlign:"center",color:row.dif>0?"#4ade80":row.dif<0?"#f87171":"rgba(255,255,255,.5)",fontWeight:700}}>{row.dif>0?"+"+row.dif:row.dif}</td>
-                            <td style={{padding:"7px 8px",textAlign:"center",color:"rgba(255,255,255,.6)"}}>{row.g}</td>
-                            <td style={{padding:"7px 8px",textAlign:"center",color:"rgba(255,255,255,.6)"}}>{row.e}</td>
-                            <td style={{padding:"7px 8px",textAlign:"center",color:"rgba(255,255,255,.6)"}}>{row.p}</td>
+                            <td style={{padding:"6px 5px",textAlign:"center",fontFamily:"'Bangers',cursive",fontSize:14,color:"#FFD700"}}>{row.pts}</td>
+                            <td style={{padding:"6px 5px",textAlign:"center",color:"rgba(255,255,255,.6)"}}>{row.j}</td>
+                            <td style={{padding:"6px 5px",textAlign:"center",color:"rgba(255,255,255,.5)"}}>{row.gf}:{row.gc}</td>
+                            <td style={{padding:"6px 5px",textAlign:"center",color:row.dif>0?"#4ade80":row.dif<0?"#f87171":"rgba(255,255,255,.5)",fontWeight:700}}>{row.dif>0?"+"+row.dif:row.dif}</td>
+                            <td style={{padding:"6px 5px",textAlign:"center",color:"rgba(255,255,255,.6)"}}>{row.g}</td>
+                            <td style={{padding:"6px 5px",textAlign:"center",color:"rgba(255,255,255,.6)"}}>{row.e}</td>
+                            <td style={{padding:"6px 5px",textAlign:"center",color:"rgba(255,255,255,.6)"}}>{row.p}</td>
                           </tr>
                         ))}
                       </tbody>
