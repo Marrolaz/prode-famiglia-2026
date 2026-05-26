@@ -336,6 +336,12 @@ const RulesModal = ({onClose}) => (
         <button onClick={onClose} style={{background:"rgba(255,255,255,.1)",border:"none",borderRadius:"50%",width:32,height:32,color:"rgba(255,255,255,.7)",fontSize:18,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}>✕</button>
       </div>
 
+      {/* Inscripción */}
+      <div style={{background:"rgba(255,215,0,.1)",border:"1px solid rgba(255,215,0,.35)",borderRadius:12,padding:"11px 16px",marginBottom:18,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+        <span style={{color:"rgba(255,255,255,.7)",fontSize:14,fontWeight:600}}>💰 Valor de la inscripción</span>
+        <span style={{fontFamily:"'Bangers',cursive",color:"#FFD700",fontSize:22,letterSpacing:1}}>$15.000</span>
+      </div>
+
       {/* Scoring table */}
       <div style={{marginBottom:18}}>
         <div style={{color:"rgba(255,255,255,.5)",fontSize:11,fontWeight:700,letterSpacing:1,marginBottom:10,textTransform:"uppercase"}}>Sistema de puntuación</div>
