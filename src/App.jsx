@@ -623,8 +623,9 @@ export default function App() {
         const pMap={};
         (p||[]).forEach(row=>{
           if(!pMap[row.username]) pMap[row.username]={matches:{}};
-          if(row.match_id!=null&&row.match_id!==0) pMap[row.username].matches[row.match_id]={home:row.home_pred,away:row.away_pred};
+          if(row.match_id!=null&&row.match_id!==0&&row.match_id!==-1) pMap[row.username].matches[row.match_id]={home:row.home_pred,away:row.away_pred};
           if(row.match_id===0&&row.champion) pMap[row.username].champion=row.champion;
+          if(row.match_id===-1&&row.champion) pMap[row.username].emoji=row.champion;
         });
         setPredictions(pMap);
         const rMap={};
@@ -696,6 +697,11 @@ export default function App() {
     setResults(p=>({...p,champion:team}));
     await supabase.from("results").upsert({match_id:"champion",home_score:team,away_score:null},{onConflict:"match_id"});
     showToast(`🏆 ${team} guardado como campeón!`);
+  };
+
+  const saveEmoji=async(emoji)=>{
+    setPredictions(p=>({...p,[currentUser.username]:{...p[currentUser.username],emoji}}));
+    await supabase.from("predictions").upsert({username:currentUser.username,match_id:-1,home_pred:null,away_pred:null,champion:emoji},{onConflict:"username,match_id"});
   };
 
   const setKnockoutTeam=async(matchId,side,val)=>{
@@ -784,7 +790,7 @@ export default function App() {
           )}
           <button className="help-btn" onClick={()=>setShowRules(true)}>?</button>
           <div style={{textAlign:"right"}}>
-            <div style={{color:"#fff",fontSize:13,fontWeight:700}}>{currentUser?.isAdmin?"👑 Admin":currentUser?.username}</div>
+            <div style={{color:"#fff",fontSize:13,fontWeight:700}}>{currentUser?.isAdmin?"👑 Admin":<span>{predictions[currentUser?.username]?.emoji||"⚽"} {currentUser?.username}</span>}</div>
             <button onClick={handleLogout} style={{background:"none",border:"none",color:"rgba(255,255,255,.35)",fontSize:11,cursor:"pointer",padding:0,fontFamily:"'Plus Jakarta Sans',sans-serif"}}>Salir</button>
           </div>
         </div>
@@ -905,7 +911,7 @@ export default function App() {
               <div className="glass-gold" style={{borderRadius:18,padding:"20px",marginBottom:14,boxShadow:"0 8px 32px rgba(255,215,0,.1)"}}>
                 <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:16}}>
                   <div style={{flex:1}}>
-                    <div style={{fontFamily:"'Bangers',cursive",color:"#FFD700",fontSize:22,letterSpacing:1}}>{viewUser}</div>
+                    <div style={{fontFamily:"'Bangers',cursive",color:"#FFD700",fontSize:22,letterSpacing:1}}><span style={{marginRight:6}}>{predictions[viewUser]?.emoji||"⚽"}</span>{viewUser}</div>
                     <div style={{color:"rgba(255,255,255,.4)",fontSize:12,marginTop:2}}>#{userRank} en la tabla · {userPts} puntos</div>
                   </div>
                   <div style={{textAlign:"center",background:"rgba(255,215,0,.15)",borderRadius:12,padding:"8px 16px"}}>
@@ -992,6 +998,20 @@ export default function App() {
                   </div>
                 </div>
               ):null;})()}
+              {/* EMOJI PICKER — solo para el propio usuario */}
+              {isMe&&(
+                <div className="glass" style={{borderRadius:14,padding:"14px 16px",marginTop:14}}>
+                  <div style={{color:"rgba(255,255,255,.5)",fontSize:11,fontWeight:700,letterSpacing:1,marginBottom:10,textTransform:"uppercase"}}>😄 Tu emoji</div>
+                  <div style={{fontSize:12,color:"rgba(255,255,255,.35)",marginBottom:10}}>Aparece en la tabla y en tu perfil</div>
+                  <div style={{display:"flex",flexWrap:"wrap",gap:8}}>
+                    {["⚽","🏆","🎯","🔥","💎","🦁","🐆","🦅","🐉","🦊","🐺","🤠","😎","🤩","😈","🥶","🧠","💪","🚀","⚡","🌟","🎪","🍀","🎭","🏴‍☠️","🇦🇷"].map(em=>(
+                      <button key={em} onClick={()=>saveEmoji(em)} style={{fontSize:24,background:predictions[currentUser?.username]?.emoji===em?"rgba(255,215,0,.2)":"rgba(255,255,255,.05)",border:`2px solid ${predictions[currentUser?.username]?.emoji===em?"rgba(255,215,0,.6)":"rgba(255,255,255,.1)"}`,borderRadius:10,width:44,height:44,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",transition:"all .15s"}}>
+                        {em}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           );
         })()}
@@ -1014,7 +1034,7 @@ export default function App() {
                   onClick={()=>{setStatsUser(entry.username);setActiveTab("stats");}}>
                   <div style={{fontSize:i<3?22:15,fontWeight:800,color:"rgba(255,255,255,.5)",minWidth:30,textAlign:"center"}}>{medal}</div>
                   <div style={{flex:1}}>
-                    <div style={{color:isMe?"#FFD700":"#fff",fontWeight:800,fontSize:14}}>{entry.username}{isMe&&<span style={{fontSize:11,opacity:.6,marginLeft:4}}>(vos)</span>}</div>
+                    <div style={{color:isMe?"#FFD700":"#fff",fontWeight:800,fontSize:14}}><span style={{marginRight:5}}>{predictions[entry.username]?.emoji||"⚽"}</span>{entry.username}{isMe&&<span style={{fontSize:11,opacity:.6,marginLeft:4}}>(vos)</span>}</div>
                     <div style={{display:"flex",gap:8,marginTop:2,alignItems:"center"}}>
                       {st.played>0&&<span style={{fontSize:11,color:"rgba(255,255,255,.3)"}}>🎯 {st.pctExact}% exactos</span>}
                     </div>
