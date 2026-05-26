@@ -512,6 +512,47 @@ const MatchCard = ({match, pred={}, real={}, locked, isAdmin, onPredChange, onRe
   );
 };
 
+// ── GROUP STANDINGS ──────────────────────────────────────────
+function calcGroupStandings(groupLetter, results) {
+  const teams = {
+    A:["México","Sudáfrica","Corea del Sur","Rep. Checa"],
+    B:["Canadá","Bosnia y Herzegovina","Qatar","Suiza"],
+    C:["Brasil","Marruecos","Haití","Escocia"],
+    D:["Estados Unidos","Paraguay","Australia","Turquía"],
+    E:["Alemania","Curazao","Costa de Marfil","Ecuador"],
+    F:["Países Bajos","Japón","Suecia","Túnez"],
+    G:["Bélgica","Egipto","Irán","Nueva Zelanda"],
+    H:["España","Cabo Verde","Arabia Saudita","Uruguay"],
+    I:["Francia","Senegal","Irak","Noruega"],
+    J:["Argentina","Argelia","Austria","Jordania"],
+    K:["Portugal","R.D. Congo","Uzbekistán","Colombia"],
+    L:["Inglaterra","Croacia","Ghana","Panamá"],
+  };
+  const groupTeams = teams[groupLetter] || [];
+  const stats = {};
+  groupTeams.forEach(t => { stats[t] = {pts:0,j:0,g:0,e:0,p:0,gf:0,gc:0}; });
+
+  const matches = GROUP_MATCHES.filter(m => m.group === groupLetter);
+  matches.forEach(m => {
+    const r = results[m.id];
+    if (!r || r.home==null || r.home==="" || r.away==null || r.away==="") return;
+    const gh = parseInt(r.home), ga = parseInt(r.away);
+    if (isNaN(gh)||isNaN(ga)) return;
+    const sh = stats[m.home], sa = stats[m.away];
+    if (!sh||!sa) return;
+    sh.j++; sa.j++;
+    sh.gf+=gh; sh.gc+=ga;
+    sa.gf+=ga; sa.gc+=gh;
+    if (gh>ga) { sh.pts+=3; sh.g++; sa.p++; }
+    else if (gh<ga) { sa.pts+=3; sa.g++; sh.p++; }
+    else { sh.pts+=1; sa.pts+=1; sh.e++; sa.e++; }
+  });
+
+  return groupTeams
+    .map(t => ({team:t, ...stats[t], dif: stats[t].gf - stats[t].gc}))
+    .sort((a,b) => b.pts-a.pts || b.dif-a.dif || b.gf-a.gf);
+}
+
 // ── MAIN APP ──────────────────────────────────────────────────
 export default function App() {
   const [screen,setScreen]=useState("login");
@@ -725,6 +766,7 @@ export default function App() {
         {!currentUser?.isAdmin&&<button className={`tab-btn${activeTab==="prode"?" active":""}`} onClick={()=>setActiveTab("prode")}>⚽ Mi Prode</button>}
         {!currentUser?.isAdmin&&<button className={`tab-btn${activeTab==="campeon"?" active":""}`} onClick={()=>setActiveTab("campeon")}>🏆 Campeón</button>}
         <button className={`tab-btn${activeTab==="tabla"?" active":""}`} onClick={()=>setActiveTab("tabla")}>📊 Tabla</button>
+        <button className={`tab-btn${activeTab==="grupos"?" active":""}`} onClick={()=>setActiveTab("grupos")}>🌍 Grupos</button>
         {!currentUser?.isAdmin&&<button className={`tab-btn${activeTab==="stats"?" active":""}`} onClick={()=>{setActiveTab("stats");setStatsUser(currentUser?.username);}}>📈 Mis Stats</button>}
         {currentUser?.isAdmin&&<button className={`tab-btn${activeTab==="admin"?" active":""}`} onClick={()=>setActiveTab("admin")}>👑 Resultados</button>}
         {currentUser?.isAdmin&&<button className={`tab-btn${activeTab==="slots"?" active":""}`} onClick={()=>setActiveTab("slots")}>🔧 Equipos KO</button>}
@@ -899,6 +941,63 @@ export default function App() {
                   </div>
                   <div style={{fontFamily:"'Bangers',cursive",fontSize:26,color:i===0?"#FFD700":i===1?"#C0C0C0":i===2?"#CD7F32":"rgba(255,255,255,.7)"}}>
                     {entry.points}<span style={{fontSize:13,fontFamily:"'Plus Jakarta Sans',sans-serif",fontWeight:600,color:"rgba(255,255,255,.35)",marginLeft:3}}>pts</span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+
+        {/* ── GRUPOS ───────────────────────────────────────── */}
+        {activeTab==="grupos"&&(
+          <div style={{animation:"slideUp .4s ease-out"}}>
+            <div style={{textAlign:"center",marginBottom:16}}>
+              <h2 style={{fontFamily:"'Bangers',cursive",color:"#FFD700",fontSize:28,letterSpacing:2,textShadow:"0 0 20px rgba(255,215,0,.3)"}}>🌍 GRUPOS — MUNDIAL 2026</h2>
+              <p style={{color:"rgba(255,255,255,.35)",fontSize:12,marginTop:4}}>Se actualiza con cada resultado cargado por el admin</p>
+            </div>
+            {Object.keys(GROUPS).map(g => {
+              const standing = calcGroupStandings(g, results);
+              return (
+                <div key={g} className="glass" style={{borderRadius:14,marginBottom:14,overflow:"hidden"}}>
+                  <div style={{background:"rgba(255,215,0,.1)",borderBottom:"1px solid rgba(255,255,255,.08)",padding:"8px 12px"}}>
+                    <span style={{fontFamily:"'Bangers',cursive",color:"#FFD700",fontSize:16,letterSpacing:2}}>GRUPO {g}</span>
+                  </div>
+                  <div style={{overflowX:"auto"}}>
+                    <table style={{width:"100%",borderCollapse:"collapse",fontFamily:"'Plus Jakarta Sans',sans-serif",fontSize:12}}>
+                      <thead>
+                        <tr style={{borderBottom:"1px solid rgba(255,255,255,.1)"}}>
+                          <td style={{padding:"6px 8px",color:"rgba(255,255,255,.4)",fontWeight:700,width:24}}>#</td>
+                          <td style={{padding:"6px 8px",color:"rgba(255,255,255,.4)",fontWeight:700}}>Equipo</td>
+                          <td style={{padding:"6px 8px",color:"rgba(255,255,255,.4)",fontWeight:700,textAlign:"center"}}>PTS</td>
+                          <td style={{padding:"6px 8px",color:"rgba(255,255,255,.4)",fontWeight:700,textAlign:"center"}}>J</td>
+                          <td style={{padding:"6px 8px",color:"rgba(255,255,255,.4)",fontWeight:700,textAlign:"center"}}>Gol</td>
+                          <td style={{padding:"6px 8px",color:"rgba(255,255,255,.4)",fontWeight:700,textAlign:"center"}}>+/-</td>
+                          <td style={{padding:"6px 8px",color:"rgba(255,255,255,.4)",fontWeight:700,textAlign:"center"}}>G</td>
+                          <td style={{padding:"6px 8px",color:"rgba(255,255,255,.4)",fontWeight:700,textAlign:"center"}}>E</td>
+                          <td style={{padding:"6px 8px",color:"rgba(255,255,255,.4)",fontWeight:700,textAlign:"center"}}>P</td>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {standing.map((row,i) => (
+                          <tr key={row.team} style={{borderBottom:i<3?"1px solid rgba(255,255,255,.06)":"none",background:i%2===0?"rgba(255,255,255,.02)":"transparent"}}>
+                            <td style={{padding:"7px 8px",color:"rgba(255,255,255,.5)",fontWeight:700,textAlign:"center"}}>{i+1}</td>
+                            <td style={{padding:"7px 8px"}}>
+                              <div style={{display:"flex",alignItems:"center",gap:6}}>
+                                <Flag team={row.team} size={18}/>
+                                <span style={{color:"#fff",fontWeight:600,whiteSpace:"nowrap"}}>{row.team}</span>
+                              </div>
+                            </td>
+                            <td style={{padding:"7px 8px",textAlign:"center",fontFamily:"'Bangers',cursive",fontSize:15,color:"#FFD700"}}>{row.pts}</td>
+                            <td style={{padding:"7px 8px",textAlign:"center",color:"rgba(255,255,255,.6)"}}>{row.j}</td>
+                            <td style={{padding:"7px 8px",textAlign:"center",color:"rgba(255,255,255,.5)",fontFamily:"'Plus Jakarta Sans',sans-serif"}}>{row.gf}:{row.gc}</td>
+                            <td style={{padding:"7px 8px",textAlign:"center",color:row.dif>0?"#4ade80":row.dif<0?"#f87171":"rgba(255,255,255,.5)",fontWeight:700}}>{row.dif>0?"+"+row.dif:row.dif}</td>
+                            <td style={{padding:"7px 8px",textAlign:"center",color:"rgba(255,255,255,.6)"}}>{row.g}</td>
+                            <td style={{padding:"7px 8px",textAlign:"center",color:"rgba(255,255,255,.6)"}}>{row.e}</td>
+                            <td style={{padding:"7px 8px",textAlign:"center",color:"rgba(255,255,255,.6)"}}>{row.p}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
                   </div>
                 </div>
               );
