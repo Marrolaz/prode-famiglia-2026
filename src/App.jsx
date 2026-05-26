@@ -859,25 +859,17 @@ export default function App() {
                 </div>
               </div>
 
-              {/* Por fase */}
-              <div className="glass" style={{borderRadius:14,padding:"14px 16px"}}>
-                <div style={{color:"rgba(255,255,255,.5)",fontSize:11,fontWeight:700,letterSpacing:1,marginBottom:10,textTransform:"uppercase"}}>Por fase</div>
-                {Object.entries(stats.byPhase).map(([ph,s])=>(
-                  <div key={ph} style={{marginBottom:10}}>
-                    <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:4}}>
-                      <span style={{color:"rgba(255,255,255,.6)",fontSize:12}}>{PHASE_LABELS[ph]||ph}</span>
-                      <span style={{color:"#fff",fontSize:12,fontWeight:700}}>{s.correct}/{s.played} <span style={{color:"#FFD700",fontSize:11}}>({s.exact} exactos)</span></span>
-                    </div>
-                    <div style={{display:"flex",alignItems:"center",gap:8}}>
-                      <div className="stat-bar-bg">
-                        <div className="stat-bar-fill" style={{width:s.played>0?`${s.correct/s.played*100}%`:"0%",background:"linear-gradient(90deg,#4ade80,#22d3ee)"}}/>
-                      </div>
-                      <span style={{color:"rgba(255,255,255,.4)",fontSize:11,minWidth:32,textAlign:"right"}}>{s.played>0?Math.round(s.correct/s.played*100):0}%</span>
-                    </div>
+              {/* Campeón pronosticado */}
+              {(()=>{const chPick=predictions[viewUser]?.champion; return chPick?(
+                <div className="glass" style={{borderRadius:14,padding:"12px 16px",textAlign:"center"}}>
+                  <div style={{color:"rgba(255,255,255,.4)",fontSize:11,fontWeight:700,letterSpacing:1,marginBottom:8,textTransform:"uppercase"}}>Pronóstico campeón</div>
+                  <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:10}}>
+                    <Flag team={chPick} size={36}/>
+                    <div style={{fontFamily:"'Bangers',cursive",color:"#FFD700",fontSize:22,letterSpacing:1}}>{chPick}</div>
+                    {results.champion&&<div style={{fontSize:13,fontWeight:800,color:results.champion===chPick?"#4ade80":"#f87171"}}>{results.champion===chPick?"✅ +10 pts":"❌"}</div>}
                   </div>
-                ))}
-                {Object.keys(stats.byPhase).length===0&&<div style={{color:"rgba(255,255,255,.25)",fontSize:13,textAlign:"center",padding:"12px 0"}}>Aún no hay resultados cargados 🏃</div>}
-              </div>
+                </div>
+              ):null;})()}
             </div>
           );
         })()}
@@ -902,7 +894,6 @@ export default function App() {
                   <div style={{flex:1}}>
                     <div style={{color:isMe?"#FFD700":"#fff",fontWeight:800,fontSize:14}}>{entry.username}{isMe&&<span style={{fontSize:11,opacity:.6,marginLeft:4}}>(vos)</span>}</div>
                     <div style={{display:"flex",gap:8,marginTop:2,alignItems:"center"}}>
-                      {chPick&&<div style={{display:"flex",alignItems:"center",gap:4}}><Flag team={chPick} size={14}/><span style={{fontSize:11,color:"rgba(255,255,255,.35)"}}>{chPick}</span></div>}
                       {st.played>0&&<span style={{fontSize:11,color:"rgba(255,255,255,.3)"}}>🎯 {st.pctExact}% exactos</span>}
                     </div>
                   </div>
