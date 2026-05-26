@@ -382,7 +382,7 @@ const RulesModal = ({onClose}) => (
             <span style={{fontSize:13,minWidth:18}}>{row.icon}</span>
             <div style={{flex:1}}>
               <div style={{color:"#fff",fontSize:11,fontWeight:700}}>{row.fase}</div>
-              <div style={{color:"rgba(255,255,255,.45)",fontSize:10}}>Ganador: <span style={{color:"#4ade80",fontWeight:700}}>+{row.win}</span>{" · "}Exacto: <span style={{color:"#FFD700",fontWeight:700}}>+{row.exact}</span></div>
+              <div style={{color:"rgba(255,255,255,.45)",fontSize:10}}>Acertar ganador: <span style={{color:"#4ade80",fontWeight:700}}>+{row.win}</span>{" · "}Resultado exacto: <span style={{color:"#FFD700",fontWeight:700}}>+{row.exact}</span></div>
             </div>
             <div style={{fontFamily:"'Bangers',cursive",color:"#FFD700",fontSize:15,minWidth:30,textAlign:"right"}}>{row.max}<span style={{fontSize:9,color:"rgba(255,255,255,.35)",fontFamily:"'Plus Jakarta Sans',sans-serif",fontWeight:600}}> max</span></div>
           </div>
