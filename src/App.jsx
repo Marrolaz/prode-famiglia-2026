@@ -1004,7 +1004,7 @@ export default function App() {
                   <div style={{color:"rgba(255,255,255,.5)",fontSize:11,fontWeight:700,letterSpacing:1,marginBottom:10,textTransform:"uppercase"}}>😄 Tu emoji</div>
                   <div style={{fontSize:12,color:"rgba(255,255,255,.35)",marginBottom:10}}>Aparece en la tabla y en tu perfil</div>
                   <div style={{display:"flex",flexWrap:"wrap",gap:8}}>
-                    {["⚽","🏆","🎯","🔥","💎","😍","😎","😡","😭","🥶","💪","🧠","💩","👻","💀","🦁","🐵","🐸","🐷","🐔","🐶","🐭","⚡","🌟","🍷","🍾","🍀","🔪","💣","💰","🕯️","❤️","🏴‍☠️","🇦🇷"].map(em=>(
+                    {["⚽","🏆","🎯","🔥","💎","😍","😂","😎","😡","😭","🥶","💪","👀","👑","🧠","💩","👻","💀","🦁","🐵","🐷","🐔","🐶","🦑","🐌","⚡","🌟","🍷","🍾","🍀","🔪","💣","💰","🕯️","❤️","🇦🇷"].map(em=>(
                       <button key={em} onClick={()=>saveEmoji(em)} style={{fontSize:24,background:predictions[currentUser?.username]?.emoji===em?"rgba(255,215,0,.2)":"rgba(255,255,255,.05)",border:`2px solid ${predictions[currentUser?.username]?.emoji===em?"rgba(255,215,0,.6)":"rgba(255,255,255,.1)"}`,borderRadius:10,width:44,height:44,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",transition:"all .15s"}}>
                         {em}
                       </button>
