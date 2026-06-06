@@ -97,9 +97,6 @@ const toBsAs = (isoUtc) => {
   };
 };
 
-
-
-
 const GROUP_MATCHES = [
   {id:1,  phase:"groups",group:"A",home:"México",              away:"Sudáfrica",           date:"2026-06-11T20:00:00Z",venue:"Ciudad de México"},
   {id:2,  phase:"groups",group:"A",home:"Corea del Sur",       away:"Rep. Checa",           date:"2026-06-12T03:00:00Z",venue:"Guadalajara"},
@@ -175,13 +172,6 @@ const GROUP_MATCHES = [
   {id:72, phase:"groups",group:"J",home:"Jordania",            away:"Argentina",            date:"2026-06-28T03:00:00Z",venue:"Dallas"},
 ]
 
-// Group stage sorted by date — split into 3 rounds of 24
-const SORTED_GROUP_MATCHES = [...GROUP_MATCHES].sort((a,b) => new Date(a.date) - new Date(b.date));
-const GROUP_ROUNDS = [
-  SORTED_GROUP_MATCHES.slice(0, 24),
-  SORTED_GROUP_MATCHES.slice(24, 48),
-  SORTED_GROUP_MATCHES.slice(48, 72),
-];
 // Group stage sorted by date — split into 3 rounds of 24
 const SORTED_GROUP_MATCHES = [...GROUP_MATCHES].sort((a,b) => new Date(a.date) - new Date(b.date));
 const GROUP_ROUNDS = [
@@ -441,7 +431,7 @@ const RulesModal = ({onClose}) => (
       ].map((rule,i)=>(
         <div key={i} style={{fontSize:11,color:"rgba(255,255,255,.6)",padding:"4px 0",borderBottom:i<3?"1px solid rgba(255,255,255,.06)":"none",lineHeight:1.4}}>{rule}</div>
       ))}
-      <div style={{textAlign:"right",marginTop:10,fontFamily:"'Bangers',cursive",fontSize:13,color:"rgba(255,215,0,.5)",letterSpacing:1}}>— Gestión Chiqui Lazzaro</div>
+    <div style={{textAlign:"right",marginTop:10,fontFamily:"'Bangers',cursive",fontSize:13,color:"rgba(255,215,0,.5)",letterSpacing:1}}>— Gestión Chiqui Lazzaro</div>
     </div>
   </div>
 );
@@ -788,8 +778,10 @@ export default function App() {
       {/* HEADER */}
       <div className="glass" style={{position:"sticky",top:0,zIndex:100,borderRadius:0,borderTop:"none",borderLeft:"none",borderRight:"none",padding:"10px 16px",display:"flex",alignItems:"center",justifyContent:"space-between",background:"rgba(6,13,31,.7)",backdropFilter:"blur(20px)"}}>
         <div>
-          <div style={{fontFamily:"'Bangers',cursive",color:"#FFD700",fontSize:20,letterSpacing:2,lineHeight:1,textShadow:"0 0 20px rgba(255,215,0,.4)"}}>PRODE FAMIGLIA</div>
-          <div style={{color:"rgba(116,172,223,.7)",fontSize:10,letterSpacing:2,fontWeight:600,marginTop:1}}>MUNDIAL 2026 ⚽</div>
+          <div>
+            <div style={{fontFamily:"'Bangers',cursive",color:"#FFD700",fontSize:20,letterSpacing:2,lineHeight:1,textShadow:"0 0 20px rgba(255,215,0,.4)"}}>PRODE FAMIGLIA</div>
+            <div style={{color:"rgba(116,172,223,.7)",fontSize:10,letterSpacing:2,fontWeight:600,marginTop:1}}>MUNDIAL 2026 ⚽</div>
+          </div>
         </div>
         <div style={{display:"flex",alignItems:"center",gap:8}}>
           {!currentUser?.isAdmin&&(
@@ -1022,6 +1014,7 @@ export default function App() {
                   </div>
                 </div>
               )}
+
             </div>
           );
         })()}
