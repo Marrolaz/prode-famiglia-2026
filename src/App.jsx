@@ -829,9 +829,9 @@ export default function App() {
       <div style={{position:"sticky",top:55,zIndex:99,background:"rgba(6,13,31,.85)",backdropFilter:"blur(16px)",borderBottom:"1px solid rgba(255,255,255,.07)",display:"flex",gap:2,padding:"6px 10px",overflowX:"auto"}}>
         <button className={`tab-btn${activeTab==="tabla"?" active":""}`} onClick={()=>setActiveTab("tabla")}>📊 Tabla</button>
         {!currentUser?.isAdmin&&<button className={`tab-btn${activeTab==="prode"?" active":""}`} onClick={()=>setActiveTab("prode")}>⚽ Mi Prode</button>}
-        {!currentUser?.isAdmin&&<button className={`tab-btn${activeTab==="campeon"?" active":""}`} onClick={()=>setActiveTab("campeon")}>🏆 Campeón</button>}
-        <button className={`tab-btn${activeTab==="grupos"?" active":""}`} onClick={()=>setActiveTab("grupos")}>🌍 Grupos</button>
         {!currentUser?.isAdmin&&<button className={`tab-btn${activeTab==="stats"?" active":""}`} onClick={()=>{setActiveTab("stats");setStatsUser(currentUser?.username);}}>📈 Mis Stats</button>}
+        <button className={`tab-btn${activeTab==="grupos"?" active":""}`} onClick={()=>setActiveTab("grupos")}>🌍 Grupos</button>
+        {!currentUser?.isAdmin&&<button className={`tab-btn${activeTab==="campeon"?" active":""}`} onClick={()=>setActiveTab("campeon")}>🏆 Campeón</button>}
         {currentUser?.isAdmin&&<button className={`tab-btn${activeTab==="admin"?" active":""}`} onClick={()=>setActiveTab("admin")}>👑 Resultados</button>}
         {currentUser?.isAdmin&&<button className={`tab-btn${activeTab==="slots"?" active":""}`} onClick={()=>setActiveTab("slots")}>🔧 Equipos KO</button>}
         {currentUser?.isAdmin&&<button className={`tab-btn${activeTab==="champAdmin"?" active":""}`} onClick={()=>setActiveTab("champAdmin")}>🏆 Campeón</button>}
