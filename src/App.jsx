@@ -395,9 +395,21 @@ const RulesModal = ({onClose}) => (
         <h2 style={{fontFamily:"'Bangers',cursive",color:"#FFD700",fontSize:20,letterSpacing:2}}>📋 REGLAS Y PUNTOS</h2>
         <button onClick={onClose} style={{background:"rgba(255,255,255,.1)",border:"none",borderRadius:"50%",width:26,height:26,color:"rgba(255,255,255,.7)",fontSize:15,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}>✕</button>
       </div>
-      <div style={{background:"rgba(255,215,0,.1)",border:"1px solid rgba(255,215,0,.35)",borderRadius:9,padding:"6px 12px",marginBottom:9,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+      <div style={{background:"rgba(255,215,0,.1)",border:"1px solid rgba(255,215,0,.35)",borderRadius:9,padding:"6px 12px",marginBottom:6,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
         <span style={{color:"rgba(255,255,255,.7)",fontSize:12,fontWeight:600}}>💰 Valor de la inscripción</span>
         <span style={{fontFamily:"'Bangers',cursive",color:"#FFD700",fontSize:17,letterSpacing:1}}>$15.000</span>
+      </div>
+      <div style={{background:"rgba(255,255,255,.04)",border:"1px solid rgba(255,255,255,.08)",borderRadius:9,padding:"7px 12px",marginBottom:9}}>
+        <div style={{color:"rgba(255,255,255,.5)",fontSize:10,fontWeight:700,letterSpacing:1,marginBottom:6,textTransform:"uppercase"}}>Premios</div>
+        <div style={{display:"flex",flexDirection:"column",gap:4}}>
+          {[["🥇","1er puesto","$150.000"],["🥈","2do puesto","$70.000"],["🥉","3er puesto","$35.000"]].map(([medal,label,prize])=>(
+            <div key={label} style={{display:"flex",alignItems:"center",gap:8}}>
+              <span style={{fontSize:16}}>{medal}</span>
+              <span style={{color:"rgba(255,255,255,.6)",fontSize:12,flex:1}}>{label}</span>
+              <span style={{fontFamily:"'Bangers',cursive",color:"#FFD700",fontSize:16,letterSpacing:.5}}>{prize}</span>
+            </div>
+          ))}
+        </div>
       </div>
       <div style={{color:"rgba(255,255,255,.5)",fontSize:10,fontWeight:700,letterSpacing:1,marginBottom:5,textTransform:"uppercase"}}>Sistema de puntuación</div>
       <div style={{marginBottom:9}}>
