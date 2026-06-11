@@ -446,11 +446,23 @@ const OthersModal = ({match, predictions, users, results, onClose}) => {
     <div style={{position:"fixed",inset:0,zIndex:1000,background:"rgba(0,0,0,.8)",backdropFilter:"blur(8px)",display:"flex",alignItems:"center",justifyContent:"center",padding:12,overflowY:"auto"}} onClick={onClose}>
       <div className="glass" style={{borderRadius:20,padding:"16px",maxWidth:420,width:"100%",animation:"modalIn .25s ease-out",maxHeight:"90vh",overflowY:"auto"}} onClick={e=>e.stopPropagation()}>
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12}}>
-          <div>
-            <div style={{fontFamily:"'Bangers',cursive",color:"#FFD700",fontSize:18,letterSpacing:1}}>👀 PRONÓSTICOS</div>
-            <div style={{fontSize:11,color:"rgba(255,255,255,.4)",marginTop:2}}>{match.home} vs {match.away} · {label} {time} hs</div>
-          </div>
+          <div style={{fontFamily:"'Bangers',cursive",color:"#FFD700",fontSize:18,letterSpacing:1}}>👀 PRONÓSTICOS</div>
           <button onClick={onClose} style={{background:"rgba(255,255,255,.1)",border:"none",borderRadius:"50%",width:26,height:26,color:"rgba(255,255,255,.7)",fontSize:15,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}>✕</button>
+        </div>
+        {/* Teams header */}
+        <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:10,marginBottom:14,padding:"10px 14px",background:"rgba(255,255,255,.05)",borderRadius:12,border:"1px solid rgba(255,255,255,.08)"}}>
+          <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:4,flex:1}}>
+            <Flag team={match.home} size={36}/>
+            <span style={{color:"#fff",fontSize:12,fontWeight:700,textAlign:"center"}}>{match.home}</span>
+          </div>
+          <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:2}}>
+            <span style={{color:"rgba(255,255,255,.3)",fontSize:18,fontWeight:800}}>vs</span>
+            <span style={{fontSize:10,color:"rgba(255,255,255,.3)"}}>{label} {time} hs</span>
+          </div>
+          <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:4,flex:1}}>
+            <Flag team={match.away} size={36}/>
+            <span style={{color:"#fff",fontSize:12,fontWeight:700,textAlign:"center"}}>{match.away}</span>
+          </div>
         </div>
         {hasResult && (
           <div style={{background:"rgba(74,222,128,.1)",border:"1px solid rgba(74,222,128,.3)",borderRadius:10,padding:"8px 14px",marginBottom:12,textAlign:"center",fontSize:13,color:"#4ade80",fontWeight:700}}>
