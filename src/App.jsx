@@ -1065,9 +1065,7 @@ export default function App() {
                   <div style={{fontSize:i<3?22:15,fontWeight:800,color:"rgba(255,255,255,.5)",minWidth:30,textAlign:"center"}}>{medal}</div>
                   <div style={{flex:1}}>
                     <div style={{color:isMe?"#FFD700":"#fff",fontWeight:800,fontSize:14}}><span style={{marginRight:5}}>{predictions[entry.username]?.emoji||"⚽"}</span>{entry.username}{isMe&&<span style={{fontSize:11,opacity:.6,marginLeft:4}}>(vos)</span>}</div>
-                    <div style={{display:"flex",gap:8,marginTop:2,alignItems:"center"}}>
-                      {st.played>0&&<span style={{fontSize:11,color:"rgba(255,255,255,.3)"}}>🎯 {st.pctExact}% exactos</span>}
-                    </div>
+                    <div style={{marginTop:0}}></div>
                   </div>
                   <div style={{fontFamily:"'Bangers',cursive",fontSize:26,color:i===0?"#FFD700":i===1?"#C0C0C0":i===2?"#CD7F32":"rgba(255,255,255,.7)"}}>
                     {entry.points}<span style={{fontSize:13,fontFamily:"'Plus Jakarta Sans',sans-serif",fontWeight:600,color:"rgba(255,255,255,.35)",marginLeft:3}}>pts</span>
