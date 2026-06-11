@@ -342,6 +342,9 @@ const FloatingDeco=()=>(
     <div style={{position:"absolute",bottom:"-15%",right:"-8%",width:600,height:600,borderRadius:"50%",background:"radial-gradient(circle,rgba(74,222,128,.08) 0%,transparent 70%)"}}/>
     <div style={{position:"absolute",top:"40%",left:"60%",width:350,height:350,borderRadius:"50%",background:"radial-gradient(circle,rgba(255,215,0,.07) 0%,transparent 70%)"}}/>
     <div style={{position:"absolute",top:0,left:0,right:0,bottom:0,background:"repeating-linear-gradient(96deg,rgba(116,172,223,.025) 0px,rgba(116,172,223,.025) 48px,transparent 48px,transparent 96px)"}}/>
+    <div style={{position:"absolute",top:"50%",left:"50%",transform:"translate(-50%,-50%)",width:"80vw",maxWidth:500,opacity:.04,pointerEvents:"none"}}>
+      <img src="https://cap.org.ar/wp-content/uploads/2025/06/Webescudoestrella.png" alt="" style={{width:"100%",display:"block",filter:"blur(2px) brightness(1.5)"}}/>
+    </div>
     <div style={{position:"absolute",bottom:"5%",right:"2%",fontSize:200,opacity:.03,transform:"rotate(-15deg)",userSelect:"none"}}>🏆</div>
     <div style={{position:"absolute",top:"12%",left:"-2%",fontSize:160,opacity:.04,transform:"rotate(20deg)",userSelect:"none"}}>⚽</div>
   </div>
