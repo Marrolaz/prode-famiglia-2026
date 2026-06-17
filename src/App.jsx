@@ -731,6 +731,15 @@ export default function App() {
     await supabase.from("predictions").upsert({username:currentUser.username,match_id:-1,home_pred:null,away_pred:null,champion:emoji},{onConflict:"username,match_id"});
   };
 
+  const deleteUser=async(username)=>{
+    if(!window.confirm(`¿Eliminar a ${username}? Se borrarán todos sus pronósticos.`)) return;
+    await supabase.from("users").delete().eq("username",username);
+    await supabase.from("predictions").delete().eq("username",username);
+    setUsers(prev=>prev.filter(u=>u.username!==username));
+    setPredictions(prev=>{const newP={...prev};delete newP[username];return newP;});
+    showToast(`🗑️ ${username} eliminado`);
+  };
+
   const setKnockoutTeam=async(matchId,side,val)=>{
     setKnockoutMatches(prev=>prev.map(m=>m.id===matchId?{...m,[side]:val}:m));
     const updated=knockoutMatches.find(m=>m.id===matchId);
@@ -835,6 +844,7 @@ export default function App() {
         {currentUser?.isAdmin&&<button className={`tab-btn${activeTab==="admin"?" active":""}`} onClick={()=>setActiveTab("admin")}>👑 Resultados</button>}
         {currentUser?.isAdmin&&<button className={`tab-btn${activeTab==="slots"?" active":""}`} onClick={()=>setActiveTab("slots")}>🔧 Equipos KO</button>}
         {currentUser?.isAdmin&&<button className={`tab-btn${activeTab==="champAdmin"?" active":""}`} onClick={()=>setActiveTab("champAdmin")}>🏆 Campeón</button>}
+        {currentUser?.isAdmin&&<button className={`tab-btn${activeTab==="userAdmin"?" active":""}`} onClick={()=>setActiveTab("userAdmin")}>👥 Usuarios</button>}
       </div>
 
       <div style={{position:"relative",zIndex:2,padding:"16px 14px",maxWidth:700,margin:"0 auto",paddingBottom:50}}>
@@ -1204,6 +1214,31 @@ export default function App() {
                 </div>
               );
             })}
+          </div>
+        )}
+
+        {/* ── ADMIN: USUARIOS ──────────────────────────────────── */}
+        {activeTab==="userAdmin"&&currentUser?.isAdmin&&(
+          <div style={{animation:"slideUp .4s ease-out"}}>
+            <div style={{textAlign:"center",marginBottom:18}}>
+              <h2 style={{fontFamily:"'Bangers',cursive",color:"#FFD700",fontSize:26,letterSpacing:2}}>👥 GESTIÓN DE USUARIOS</h2>
+              <p style={{color:"rgba(255,255,255,.35)",fontSize:13,marginTop:4}}>{users.filter(u=>!u.isAdmin).length}/25 participantes registrados</p>
+            </div>
+            {users.filter(u=>!u.isAdmin).sort((a,b)=>a.username.localeCompare(b.username)).map((u)=>{
+              const userPts = lb.find(x=>x.username===u.username)?.points||0;
+              const userRank = lb.findIndex(x=>x.username===u.username)+1;
+              return (
+                <div key={u.username} className="glass" style={{borderRadius:14,padding:"12px 16px",marginBottom:8,display:"flex",alignItems:"center",gap:10}}>
+                  <div style={{fontSize:18,minWidth:26}}>{predictions[u.username]?.emoji||"⚽"}</div>
+                  <div style={{flex:1}}>
+                    <div style={{color:"#fff",fontWeight:700,fontSize:14}}>{u.username}</div>
+                    <div style={{color:"rgba(255,255,255,.35)",fontSize:11,marginTop:2}}>#{userRank} · {userPts} pts</div>
+                  </div>
+                  <button onClick={()=>deleteUser(u.username)} style={{background:"rgba(239,68,68,.1)",border:"1px solid rgba(239,68,68,.25)",borderRadius:8,color:"#f87171",padding:"6px 14px",cursor:"pointer",fontSize:12,fontFamily:"'Plus Jakarta Sans',sans-serif",fontWeight:700}}>🗑️ Eliminar</button>
+                </div>
+              );
+            })}
+            {users.filter(u=>!u.isAdmin).length===0&&<div style={{textAlign:"center",color:"rgba(255,255,255,.25)",padding:40,fontSize:14}}>Sin participantes aún 🤷</div>}
           </div>
         )}
 
