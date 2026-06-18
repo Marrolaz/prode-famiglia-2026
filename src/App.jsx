@@ -549,9 +549,9 @@ const MatchCard = ({match, pred={}, real={}, locked, isAdmin, onPredChange, onRe
             <span style={{color:"rgba(255,255,255,.3)",fontSize:20,fontWeight:800}}>–</span>
             <input className="score-input score-input-admin" type="number" min="0" value={real.away??""} onChange={e=>onResultChange("away",e.target.value)} placeholder="?"/></>
           ):(
-            <><input className="score-input" type="number" min="0" max="99" value={pred.home??""} disabled={locked||teamsPending} onChange={e=>onPredChange("home",e.target.value)} placeholder="?"/>
+            <><input className="score-input" type="number" min="0" max="9" maxLength="1" value={pred.home??""} disabled={locked||teamsPending} onChange={e=>{const v=e.target.value.slice(-1);onPredChange("home",v);if(v!==""){const next=document.getElementById(`away-${match.id}`);if(next)next.focus();}}} placeholder="?" id={`home-${match.id}`}/>
             <span style={{color:"rgba(255,255,255,.3)",fontSize:20,fontWeight:800}}>–</span>
-            <input className="score-input" type="number" min="0" max="99" value={pred.away??""} disabled={locked||teamsPending} onChange={e=>onPredChange("away",e.target.value)} placeholder="?"/></>
+            <input className="score-input" type="number" min="0" max="9" maxLength="1" value={pred.away??""} disabled={locked||teamsPending} onChange={e=>{const v=e.target.value.slice(-1);onPredChange("away",v);if(v!==""){e.target.blur();}}} placeholder="?" id={`away-${match.id}`}/></>
           )}
         </div>
         <div style={{flex:1,textAlign:"left"}}>
@@ -702,7 +702,13 @@ export default function App() {
 
   const setPrediction=async(matchId,side,val)=>{
     const clean=val.replace(/[^0-9]/g,"").slice(0,2);
-    const newPred={...(predictions[currentUser.username]?.matches?.[matchId]||{}),[side]:clean};
+    const otherSide=side==="home"?"away":"home";
+    const existing=predictions[currentUser.username]?.matches?.[matchId]||{};
+    const newPred={...existing,[side]:clean};
+    // Auto-fill the other side with 0 if it's empty, so a partial entry never stays unsaved
+    if(clean!==""&&(existing[otherSide]==null||existing[otherSide]==="")){
+      newPred[otherSide]="0";
+    }
     setPredictions(p=>({...p,[currentUser.username]:{...p[currentUser.username],matches:{...(p[currentUser.username]?.matches||{}),[matchId]:newPred}}}));
     await supabase.from("predictions").upsert({username:currentUser.username,match_id:matchId,home_pred:newPred.home??null,away_pred:newPred.away??null},{onConflict:"username,match_id"});
   };
