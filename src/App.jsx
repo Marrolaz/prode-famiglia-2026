@@ -409,7 +409,7 @@ const RulesModal = ({onClose}) => (
             <div key={label} style={{display:"flex",alignItems:"center",gap:8}}>
               <span style={{fontSize:16}}>{medal}</span>
               <span style={{color:"rgba(255,255,255,.6)",fontSize:12,flex:1}}>{label}</span>
-              <span style={{fontFamily:"'Bangers',cursive",color:"#FFD700",fontSize:16,letterSpacing:.5}}>{prize}</span>
+              <span style={{fontFamily:"'Plus Jakarta Sans',sans-serif",fontWeight:800,color:"#FFD700",fontSize:14}}>{prize}</span>
             </div>
           ))}
         </div>
@@ -496,7 +496,7 @@ const OthersModal = ({match, predictions, users, results, onClose}) => {
                 ? <div style={{fontFamily:"'Bangers',cursive",fontSize:18,color:"#fff",letterSpacing:1}}>{pred.home} – {pred.away}</div>
                 : <div style={{fontSize:12,color:"rgba(255,255,255,.25)"}}>Sin pronóstico</div>
               }
-              {pts!==null && <div style={{fontFamily:"'Bangers',cursive",fontSize:15,color:ptColor,minWidth:32,textAlign:"right"}}>{pts>0?`+${pts}`:"-0"}</div>}
+              {pts!==null && <div style={{fontFamily:"'Bangers',cursive",fontSize:15,color:ptColor,minWidth:32,textAlign:"right"}}>{pts>0?`+${pts}`:"0"}</div>}
             </div>
           );
         })}
@@ -534,7 +534,7 @@ const MatchCard = ({match, pred={}, real={}, locked, isAdmin, onPredChange, onRe
         </div>
         <div style={{display:"flex",alignItems:"center",gap:6}}>
           {!isAdmin&&locked&&<span style={{fontSize:11,color:"#ef4444",fontWeight:600}}>🔒</span>}
-          {!isAdmin&&hasResult&&<span style={{fontSize:13,fontWeight:800,color:pts===winPts+exactPts?"#4ade80":pts===winPts?"#facc15":"#f87171"}}>{pts>0?`+${pts}`:"-0"} pts</span>}
+          {!isAdmin&&hasResult&&<span style={{fontSize:13,fontWeight:800,color:pts===winPts+exactPts?"#4ade80":pts===winPts?"#facc15":"#f87171"}}>{pts>0?`+${pts}`:"0"} pts</span>}
           {showOthersBtn&&<button onClick={onShowOthers} style={{background:"rgba(255,255,255,.08)",border:"1px solid rgba(255,255,255,.15)",borderRadius:6,color:"rgba(255,255,255,.6)",fontSize:10,padding:"2px 7px",cursor:"pointer",fontFamily:"'Plus Jakarta Sans',sans-serif",fontWeight:600}}>👀</button>}
         </div>
       </div>
@@ -1093,12 +1093,12 @@ export default function App() {
               return (
                 <div key={entry.username} className={isMe?"glass-gold":"glass"} style={{display:"flex",alignItems:"center",gap:12,borderRadius:14,padding:"12px 16px",marginBottom:8,animation:`slideUp ${.3+i*.04}s ease-out`,cursor:"pointer"}}
                   onClick={()=>{setStatsUser(entry.username);setActiveTab("stats");}}>
-                  <div style={{fontSize:i<3?22:15,fontWeight:800,color:"rgba(255,255,255,.5)",minWidth:30,textAlign:"center"}}>{medal}</div>
+                  <div style={{fontSize:i<3?26:15,fontWeight:800,color:i<3?"#fff":"rgba(255,255,255,.5)",minWidth:30,textAlign:"center",filter:i<3?"drop-shadow(0 0 6px rgba(255,255,255,.4))":"none"}}>{medal}</div>
                   <div style={{flex:1}}>
                     <div style={{color:isMe?"#FFD700":"#fff",fontWeight:800,fontSize:14}}><span style={{marginRight:5}}>{predictions[entry.username]?.emoji||"⚽"}</span>{entry.username}{isMe&&<span style={{fontSize:11,opacity:.6,marginLeft:4}}>(vos)</span>}</div>
                     <div style={{marginTop:0}}></div>
                   </div>
-                  <div style={{fontFamily:"'Plus Jakarta Sans',sans-serif",fontWeight:800,fontSize:24,color:i===0?"#FFD700":i===1?"#C0C0C0":i===2?"#CD7F32":"rgba(255,255,255,.7)"}}>
+                  <div style={{fontFamily:"'Plus Jakarta Sans',sans-serif",fontWeight:800,fontSize:24,color:i===0?"#FFD700":i===1?"#E8E8F0":i===2?"#D08A4F":"rgba(255,255,255,.7)"}}>
                     {entry.points}<span style={{fontSize:13,fontWeight:600,color:"rgba(255,255,255,.35)",marginLeft:3}}>pts</span>
                   </div>
                 </div>
