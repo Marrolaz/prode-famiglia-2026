@@ -640,9 +640,24 @@ export default function App() {
   useEffect(()=>{
     (async()=>{
       try {
-        const [{data:u},{data:p},{data:r},{data:km}]=await Promise.all([
+        // Fetch predictions with pagination to avoid Supabase's default 1000-row limit
+        const fetchAllPredictions = async () => {
+          let all = [];
+          let from = 0;
+          const pageSize = 1000;
+          while (true) {
+            const { data, error } = await supabase.from("predictions").select("*").range(from, from + pageSize - 1);
+            if (error) { console.error(error); break; }
+            if (!data || data.length === 0) break;
+            all = all.concat(data);
+            if (data.length < pageSize) break;
+            from += pageSize;
+          }
+          return all;
+        };
+        const [{data:u},p,{data:r},{data:km}]=await Promise.all([
           supabase.from("users").select("*"),
-          supabase.from("predictions").select("*"),
+          fetchAllPredictions(),
           supabase.from("results").select("*"),
           supabase.from("knockout_matches").select("*"),
         ]);
