@@ -242,6 +242,47 @@ function getTotalPoints(username, predictions, results, knockoutMatches) {
   return pts;
 }
 
+// ── RANKING CON EMPATES + PREMIOS ──────────────────────────────
+const PRIZE_AMOUNTS = [150000, 70000, 35000]; // 1ro, 2do, 3ro
+
+// Given a sorted (desc by points) leaderboard array of {username, points},
+// returns the same array enriched with `rank` (1,2,2,4 style) and `prize` (money won, 0 if none).
+function calcRankingsWithPrizes(lb) {
+  if (!lb || lb.length === 0) return [];
+
+  // 1) Assign standard competition rank (1,2,2,4 style)
+  const ranks = [];
+  for (let i = 0; i < lb.length; i++) {
+    if (i > 0 && lb[i].points === lb[i - 1].points) {
+      ranks.push(ranks[i - 1]);
+    } else {
+      ranks.push(i + 1);
+    }
+  }
+  const ranked = lb.map((entry, i) => ({ ...entry, rank: ranks[i] }));
+
+  // 2) Group by rank to know how many people share each rank
+  const rankGroups = {};
+  ranked.forEach(e => {
+    if (!rankGroups[e.rank]) rankGroups[e.rank] = [];
+    rankGroups[e.rank].push(e);
+  });
+
+  // 3) For each rank that falls within the top-3 prize positions, sum up the prize
+  //    money for all positions it occupies (e.g. a 2-way tie for rank 1 occupies
+  //    positions 1 and 2, so it gets PRIZE[0]+PRIZE[1] split between the 2 people).
+  return ranked.map(e => {
+    if (e.rank > 3) return { ...e, prize: 0 };
+    const groupSize = rankGroups[e.rank].length;
+    let totalPrize = 0;
+    for (let pos = e.rank; pos < e.rank + groupSize && pos <= 3; pos++) {
+      totalPrize += PRIZE_AMOUNTS[pos - 1] || 0;
+    }
+    const prizeEach = Math.round(totalPrize / groupSize);
+    return { ...e, prize: prizeEach };
+  });
+}
+
 // ── STATS ─────────────────────────────────────────────────────
 function calcStats(username, predictions, results, knockoutMatches) {
   const allMatches = [...GROUP_MATCHES, ...knockoutMatches];
@@ -412,6 +453,9 @@ const RulesModal = ({onClose}) => (
               <span style={{fontFamily:"'Plus Jakarta Sans',sans-serif",fontWeight:800,color:"#FFD700",fontSize:14}}>{prize}</span>
             </div>
           ))}
+        </div>
+        <div style={{fontSize:10,color:"rgba(255,255,255,.4)",marginTop:7,lineHeight:1.4,borderTop:"1px solid rgba(255,255,255,.06)",paddingTop:6}}>
+          🤝 En caso de empate en puntos, los premios de las posiciones involucradas se suman y se reparten en partes iguales entre los empatados.
         </div>
       </div>
       <div style={{color:"rgba(255,255,255,.5)",fontSize:10,fontWeight:700,letterSpacing:1,marginBottom:5,textTransform:"uppercase"}}>Sistema de puntuación</div>
@@ -1085,20 +1129,27 @@ export default function App() {
               <p style={{color:"rgba(255,255,255,.35)",fontSize:13,marginTop:4}}>{users.filter(u=>!u.isAdmin).length} participantes</p>
             </div>
             {lb.length===0?<div style={{textAlign:"center",color:"rgba(255,255,255,.3)",padding:40}}>Aún no hay participantes 🤷</div>
-            :lb.map((entry,i)=>{
+            :calcRankingsWithPrizes(lb).map((entry,i)=>{
               const isMe=entry.username===currentUser?.username;
-              const medal=i===0?"🥇":i===1?"🥈":i===2?"🥉":`${i+1}.`;
+              const rank=entry.rank;
+              const medal=rank===1?"🥇":rank===2?"🥈":rank===3?"🥉":`${rank}.`;
+              const isPodium=rank<=3;
               const chPick=predictions[entry.username]?.champion;
               const st=calcStats(entry.username,predictions,results,knockoutMatches);
               return (
                 <div key={entry.username} className={isMe?"glass-gold":"glass"} style={{display:"flex",alignItems:"center",gap:12,borderRadius:14,padding:"12px 16px",marginBottom:8,animation:`slideUp ${.3+i*.04}s ease-out`,cursor:"pointer"}}
                   onClick={()=>{setStatsUser(entry.username);setActiveTab("stats");}}>
-                  <div style={{fontSize:i<3?26:15,fontWeight:800,color:i<3?"#fff":"rgba(255,255,255,.5)",minWidth:30,textAlign:"center",filter:i<3?"drop-shadow(0 0 6px rgba(255,255,255,.4))":"none"}}>{medal}</div>
+                  <div style={{fontSize:isPodium?26:15,fontWeight:800,color:isPodium?"#fff":"rgba(255,255,255,.5)",minWidth:30,textAlign:"center",filter:isPodium?"drop-shadow(0 0 6px rgba(255,255,255,.4))":"none"}}>{medal}</div>
                   <div style={{flex:1}}>
                     <div style={{color:isMe?"#FFD700":"#fff",fontWeight:800,fontSize:14}}><span style={{marginRight:5}}>{predictions[entry.username]?.emoji||"⚽"}</span>{entry.username}{isMe&&<span style={{fontSize:11,opacity:.6,marginLeft:4}}>(vos)</span>}</div>
                     <div style={{marginTop:0}}></div>
                   </div>
-                  <div style={{fontFamily:"'Plus Jakarta Sans',sans-serif",fontWeight:800,fontSize:24,color:i===0?"#FFD700":i===1?"#E8E8F0":i===2?"#D08A4F":"rgba(255,255,255,.7)"}}>
+                  {isPodium&&entry.prize>0&&(
+                    <div style={{fontFamily:"'Plus Jakarta Sans',sans-serif",fontWeight:800,fontSize:13,color:"#4ade80",textAlign:"right",lineHeight:1.2}}>
+                      ${entry.prize.toLocaleString("es-AR")}
+                    </div>
+                  )}
+                  <div style={{fontFamily:"'Plus Jakarta Sans',sans-serif",fontWeight:800,fontSize:24,color:rank===1?"#FFD700":rank===2?"#E8E8F0":rank===3?"#D08A4F":"rgba(255,255,255,.7)"}}>
                     {entry.points}<span style={{fontSize:13,fontWeight:600,color:"rgba(255,255,255,.35)",marginLeft:3}}>pts</span>
                   </div>
                 </div>
