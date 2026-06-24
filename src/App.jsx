@@ -659,6 +659,8 @@ export default function App() {
   const [currentUser,setCurrentUser]=useState(null);
   const [users,setUsers]=useState([]);
   const [predictions,setPredictions]=useState({});
+  const predictionsRef=useRef({});
+  useEffect(()=>{ predictionsRef.current = predictions; },[predictions]);
   const [results,setResults]=useState({});
   const [knockoutMatches,setKnockoutMatches]=useState(KNOCKOUT_TEMPLATES.map(m=>({...m})));
   const [loginForm,setLoginForm]=useState({username:"",password:""});
@@ -762,13 +764,20 @@ export default function App() {
   const setPrediction=async(matchId,side,val)=>{
     const clean=val.replace(/[^0-9]/g,"").slice(0,2);
     const otherSide=side==="home"?"away":"home";
-    const existing=predictions[currentUser.username]?.matches?.[matchId]||{};
-    const newPred={...existing,[side]:clean};
-    // Auto-fill the other side with 0 if it's empty, so a partial entry never stays unsaved
-    if(clean!==""&&(existing[otherSide]==null||existing[otherSide]==="")){
-      newPred[otherSide]="0";
+    // Read the most current snapshot via a ref-like pattern: use predictionsRef to avoid stale closures
+    const currentMatches = predictionsRef.current[currentUser.username]?.matches?.[matchId] || {};
+    const newPred = {...currentMatches, [side]: clean};
+    if (clean !== "" && (currentMatches[otherSide] == null || currentMatches[otherSide] === "")) {
+      newPred[otherSide] = "0";
     }
-    setPredictions(p=>({...p,[currentUser.username]:{...p[currentUser.username],matches:{...(p[currentUser.username]?.matches||{}),[matchId]:newPred}}}));
+    predictionsRef.current = {
+      ...predictionsRef.current,
+      [currentUser.username]: {
+        ...predictionsRef.current[currentUser.username],
+        matches: { ...(predictionsRef.current[currentUser.username]?.matches || {}), [matchId]: newPred }
+      }
+    };
+    setPredictions(predictionsRef.current);
     await supabase.from("predictions").upsert({username:currentUser.username,match_id:matchId,home_pred:newPred.home??null,away_pred:newPred.away??null},{onConflict:"username,match_id"});
   };
 
