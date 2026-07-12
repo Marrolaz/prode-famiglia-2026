@@ -726,7 +726,7 @@ export default function App() {
   const [registerForm,setRegisterForm]=useState({username:"",password:"",confirm:""});
   const [error,setError]=useState("");
   const [activeTab,setActiveTab]=useState("prode");
-  const [selectedPhase,setSelectedPhase]=useState("qf");
+  const [selectedPhase,setSelectedPhase]=useState("sf");
   const [selectedRound,setSelectedRound]=useState(0); // 0=fecha1, 1=fecha2, 2=fecha3
   const [toast,setToast]=useState("");
   const [champSearch,setChampSearch]=useState("");
@@ -887,7 +887,7 @@ export default function App() {
   const userChamp=predictions[currentUser?.username]?.champion;
   const champLocked=new Date()>=new Date(new Date("2026-06-11T19:00:00Z").getTime()-30*60*1000);
   const filteredTeams=ALL_TEAMS.filter(t=>t.toLowerCase().includes(champSearch.toLowerCase()));
-  const phases=["qf","sf","3rd","final","groups","r32","r16"];
+  const phases=["sf","3rd","final","groups","r32","r16","qf"];
 
   const matchesForPhase=(phase)=>{
     if(phase==="groups") return GROUP_ROUNDS[selectedRound];
