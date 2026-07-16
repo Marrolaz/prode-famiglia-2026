@@ -217,7 +217,7 @@ const KNOCKOUT_TEMPLATES = [
 
 const PHASE_LABELS = {
   groups:"Fase de Grupos", r32:"16vos de Final", r16:"8vos de Final",
-  qf:"Cuartos de Final", sf:"Semifinales", "3rd":"3er Puesto", final:"FINAL 🏆"
+  qf:"Cuartos de Final", sf:"Semifinales", "3rd":"3er Puesto", final:"FINAL 🏆", "3rd_final":"3er Puesto & Final 🏆"
 };
 
 const isKnockoutPhase = (phase) => phase !== "groups";
@@ -726,7 +726,7 @@ export default function App() {
   const [registerForm,setRegisterForm]=useState({username:"",password:"",confirm:""});
   const [error,setError]=useState("");
   const [activeTab,setActiveTab]=useState("prode");
-  const [selectedPhase,setSelectedPhase]=useState("sf");
+  const [selectedPhase,setSelectedPhase]=useState("3rd_final");
   const [selectedRound,setSelectedRound]=useState(0); // 0=fecha1, 1=fecha2, 2=fecha3
   const [toast,setToast]=useState("");
   const [champSearch,setChampSearch]=useState("");
@@ -887,10 +887,11 @@ export default function App() {
   const userChamp=predictions[currentUser?.username]?.champion;
   const champLocked=new Date()>=new Date(new Date("2026-06-11T19:00:00Z").getTime()-30*60*1000);
   const filteredTeams=ALL_TEAMS.filter(t=>t.toLowerCase().includes(champSearch.toLowerCase()));
-  const phases=["sf","3rd","final","groups","r32","r16","qf"];
+  const phases=["3rd_final","groups","r32","r16","qf","sf"];
 
   const matchesForPhase=(phase)=>{
     if(phase==="groups") return GROUP_ROUNDS[selectedRound];
+    if(phase==="3rd_final") return knockoutMatches.filter(m=>m.phase==="3rd"||m.phase==="final");
     return knockoutMatches.filter(m=>m.phase===phase);
   };
 
