@@ -1033,7 +1033,17 @@ export default function App() {
             )}
 
             {/* Points info */}
-            {(()=>{const [w,e]=PHASE_POINTS[selectedPhase]||[3,3];return(
+            {selectedPhase==="3rd_final"?(
+              <div style={{display:"flex",gap:10,marginBottom:12,padding:"9px 14px",borderRadius:12,background:"rgba(255,255,255,.04)",border:"1px solid rgba(255,255,255,.07)",flexWrap:"wrap"}}>
+                <span style={{color:"rgba(255,255,255,.4)",fontSize:12}}>🔒 Cierra 30 min antes</span>
+                <span style={{color:"rgba(255,255,255,.2)"}}>·</span>
+                <span style={{color:"#4ade80",fontSize:12,fontWeight:600}}>3er Puesto: +5 ganador · +5 exacto</span>
+                <span style={{color:"rgba(255,255,255,.2)"}}>·</span>
+                <span style={{color:"#FFD700",fontSize:12,fontWeight:600}}>Final: +7 ganador · +7 exacto</span>
+                <span style={{color:"rgba(255,255,255,.2)"}}>·</span>
+                <span style={{color:"rgba(116,172,223,.7)",fontSize:12}}>resultado a 120 min</span>
+              </div>
+            ):(()=>{const [w,e]=PHASE_POINTS[selectedPhase]||[3,3];return(
               <div style={{display:"flex",gap:10,marginBottom:12,padding:"9px 14px",borderRadius:12,background:"rgba(255,255,255,.04)",border:"1px solid rgba(255,255,255,.07)",flexWrap:"wrap"}}>
                 <span style={{color:"rgba(255,255,255,.4)",fontSize:12}}>🔒 Cierra 30 min antes</span>
                 <span style={{color:"rgba(255,255,255,.2)"}}>·</span>
